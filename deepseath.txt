@@ -1,0 +1,211 @@
+Com certeza. Ter uma base de código completa e final é a melhor maneira de garantir que tudo esteja sincronizado.
+
+Aqui estão todas as classes Java e os arquivos de configuração/template do seu projeto, na sua versão final e funcional. Copie o conteúdo de cada bloco e cole no arquivo correspondente no seu NetBeans, substituindo o conteúdo antigo.
+
+1. pom.xml (Arquivo de Build do Maven)
+
+Localização: pom.xml (na raiz do projeto)
+
+code Xml
+
+downloadcontent_copy
+
+expand_less
+
+<!DOCTYPE html> 
+<html lang="pt-br">
+   <head>
+      <meta charset="UTF-8">
+      <title>Cadastro de Fichas de Produto</title>
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+   </head>
+   <body class="bg-light">
+      <div class="container-fluid mt-4">
+         <header class="text-center mb-4">
+            <h1>Controle de Fichas de Produto</h1>
+            <p class="lead">Preencha o formulário para cadastrar uma nova ficha de produto.</p>
+         </header>
+         <!-- Formulário de Cadastro --> 
+         <div class="card shadow-sm mb-5">
+            <div class="card-header bg-primary text-white">
+               <h4 class="my-1">Cadastrar Nova Ficha</h4>
+            </div>
+            <div class="card-body">
+               <form id="fichaForm" data-th-action="@{/salvar}" data-th-object="${fichaForm}" method="post">
+                  <div class="row g-3">
+                     <div class="col-md-4"><label for="pregao" class="form-label">Pregão:</label><input type="text" id="pregao" data-th-field="*{pregao}" class="form-control"/></div>
+                     <div class="col-md-4"><label for="processo" class="form-label">Processo:</label><input type="text" id="processo" data-th-field="*{processo}" class="form-control"/></div>
+                     <div class="col-md-4"><label for="item" class="form-label">Item:</label><input type="text" id="item" data-th-field="*{item}" class="form-control"/></div>
+                     <div class="col-md-6"><label for="licitante" class="form-label">Licitante:</label><input type="text" id="licitante" data-th-field="*{licitante}" class="form-control"/></div>
+                     <div class="col-md-6"><label for="infoProduto" class="form-label">Info Produto:</label><input type="text" id="infoProduto" data-th-field="*{infoProduto}" class="form-control"/></div>
+                     <div class="col-md-3"><label for="marca" class="form-label">Marca:</label><input type="text" id="marca" data-th-field="*{marca}" class="form-control"/></div>
+                     <div class="col-md-3"><label for="material" class="form-label">Material:</label><input type="text" id="material" data-th-field="*{material}" class="form-control"/></div>
+                     <div class="col-md-3"><label for="modelo" class="form-label">Modelo:</label><input type="text" id="modelo" data-th-field="*{modelo}" class="form-control"/></div>
+                     <div class="col-md-3"><label for="tamanho" class="form-label">Tamanho:</label><input type="text" id="tamanho" data-th-field="*{tamanho}" class="form-control"/></div>
+                     <div class="col-md-3"><label for="lote" class="form-label">Lote:</label><input type="text" id="lote" data-th-field="*{lote}" class="form-control"/></div>
+                     <div class="col-md-3"><label for="fabricacao" class="form-label">Fabricação:</label><input type="date" id="fabricacao" data-th-field="*{fabricacao}" class="form-control"/></div>
+                     <div class="col-md-3"><label for="validade" class="form-label">Validade:</label><input type="date" id="validade" data-th-field="*{validade}" class="form-control"/></div>
+                     <div class="col-md-3"><label for="referencia" class="form-label">Referência:</label><input type="text" id="referencia" data-th-field="*{referencia}" class="form-control"/></div>
+                     <div class="col-md-4"><label for="quantidade" class="form-label">Quantidade:</label><input type="number" id="quantidade" data-th-field="*{quantidade}" class="form-control"/></div>
+                     <div class="col-md-8"><label for="formaAvaliacao" class="form-label">Forma de Avaliação:</label><input type="text" id="formaAvaliacao" data-th-field="*{formaAvaliacao}" class="form-control"/></div>
+                     <div class="col-md-4"><label for="enviadoPara" class="form-label">Enviado Para:</label><input type="text" id="enviadoPara" data-th-field="*{enviadoPara}" class="form-control"/></div>
+                     <div class="col-md-4"><label for="responsavel" class="form-label">Responsável:</label><input type="text" id="responsavel" data-th-field="*{responsavel}" class="form-control"/></div>
+                     <div class="col-md-4"><label for="dataEnvio" class="form-label">Data de Envio:</label><input type="date" id="dataEnvio" data-th-field="*{dataEnvio}" class="form-control"/></div>
+                  </div>
+                  <hr class="my-4">
+                  <button id="saveButton" type="submit" class="w-100 btn btn-primary btn-lg">Salvar Ficha</button> 
+               </form>
+            </div>
+         </div>
+         <!-- Tabela de Fichas Cadastradas --> 
+         <div class="card shadow-sm">
+            <div class="card-header">
+               <h4 class="my-1">Fichas Cadastradas</h4>
+            </div>
+            <div class="card-body p-0">
+               <div class="table-responsive">
+                  <table class="table table-striped table-hover mb-0">
+                     <thead class="table-dark">
+                        <tr>
+                           <th>ID</th>
+                           <th>Pregão</th>
+                           <th>Processo</th>
+                           <th>Item</th>
+                           <th>Licitante</th>
+                           <th>Produto</th>
+                           <th>Marca</th>
+                           <th>Qtd.</th>
+                           <th>Responsável</th>
+                           <th>Data Envio</th>
+                           <th>Ações</th>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        <th:block data-th-each="ficha : ${listaFichas}">
+                           <tr>
+                              <td data-th-text="${ficha.id}"></td>
+                              <td data-th-text="${ficha.pregao}"></td>
+                              <td data-th-text="${ficha.processo}"></td>
+                              <td data-th-text="${ficha.item}"></td>
+                              <td data-th-text="${ficha.licitante}"></td>
+                              <td data-th-text="${ficha.infoProduto}"></td>
+                              <td data-th-text="${ficha.marca}"></td>
+                              <td data-th-text="${ficha.quantidade}"></td>
+                              <td data-th-text="${ficha.responsavel}"></td>
+                              <td data-th-text="${ficha.dataEnvio}"></td>
+                              <td> <a class="btn btn-sm btn-success" data-th-href="@{/exportar/{id}(id=${ficha.id})}"> Exportar </a> </td>
+                           </tr>
+                        </th:block>
+                        <th:block data-th-if="${listaFichas.isEmpty()}">
+                           <tr>
+                              <td colspan="11" class="text-center text-muted">Nenhuma ficha cadastrada.</td>
+                           </tr>
+                        </th:block>
+                     </tbody>
+                  </table>
+               </div>
+            </div>
+         </div>
+      </div>
+      <!-- CÓDIGO JAVASCRIPT --> <script> document.addEventListener('keydown', function (event) { if (event.key === 'Enter') { const activeElement = document.activeElement; if (activeElement.id === 'saveButton' || activeElement.tagName.toLowerCase() === 'textarea') { return; } event.preventDefault(); const form = document.getElementById('fichaForm'); const focusableElements = Array.from(form.querySelectorAll('input, select, textarea, button')); const currentIndex = focusableElements.indexOf(activeElement); const nextIndex = (currentIndex + 1) % focusableElements.length; const nextElement = focusableElements[nextIndex]; if (nextElement) { nextElement.focus(); } } });</script> 
+   </body>
+</html>
+
+
+2. application.properties (Arquivo de Configuração)
+
+Localização: src/main/resources/application.properties
+
+code Properties
+
+downloadcontent_copy
+
+expand_less
+
+# =================================================================== # CONFIGURAÇÃO DE PERFIS (Profiles) # =================================================================== # Ativa o perfil 'dev', que habilita o BrowserLauncher para abrir o navegador automaticamente. spring.profiles.active=dev # =================================================================== # CONFIGURAÇÃO DO BANCO DE DADOS (DataSource) # =================================================================== # URL de conexão para o SQLite. Isso criará um arquivo chamado 'seath.db' na raiz do projeto. spring.datasource.url=jdbc:sqlite:seath.db # Classe do Driver JDBC para o SQLite. spring.datasource.driver-class-name=org.sqlite.JDBC # SQLite não precisa de usuário e senha por padrão. spring.datasource.username= spring.datasource.password= # =================================================================== # CONFIGURAÇÃO DO JPA / HIBERNATE # =================================================================== # Informa ao Hibernate qual "dialeto" SQL ele deve usar para se comunicar com o SQLite. spring.jpa.database-platform=org.hibernate.community.dialect.SQLiteDialect # Gerenciamento automático do schema do banco de dados (update: atualiza a estrutura). spring.jpa.hibernate.ddl-auto=update # Mostra no console os comandos SQL que o Hibernate está executando (bom para debug). spring.jpa.show-sql=true 
+
+3. SeathApplication.java (Classe Principal)
+
+Localização: src/main/java/com/example/seath/SeathApplication.java
+
+code Java
+
+downloadcontent_copy
+
+expand_less
+
+package com.example.seath; import org.springframework.boot.SpringApplication; import org.springframework.boot.autoconfigure.SpringBootApplication; @SpringBootApplication public class SeathApplication { public static void main(String[] args) { SpringApplication.run(SeathApplication.class, args); } } 
+
+4. Ficha.java (Modelo / Entidade)
+
+Localização: src/main/java/com/example/seath/model/Ficha.java
+
+code Java
+
+downloadcontent_copy
+
+expand_less
+
+package com.example.seath.model; import jakarta.persistence.Entity; import jakarta.persistence.GeneratedValue; import jakarta.persistence.GenerationType; import jakarta.persistence.Id; @Entity public class Ficha { @Id @GeneratedValue(strategy = GenerationType.IDENTITY) private Long id; private String pregao; private String processo; private String item; private String licitante; private String infoProduto; private String marca; private String material; private String modelo; private String tamanho; private String lote; private String fabricacao; private String validade; private String referencia; private Integer quantidade; private String formaAvaliacao; private String enviadoPara; private String responsavel; private String dataEnvio; // Getters e Setters public Long getId() { return id; } public void setId(Long id) { this.id = id; } public String getPregao() { return pregao; } public void setPregao(String pregao) { this.pregao = pregao; } public String getProcesso() { return processo; } public void setProcesso(String processo) { this.processo = processo; } public String getItem() { return item; } public void setItem(String item) { this.item = item; } public String getLicitante() { return licitante; } public void setLicitante(String licitante) { this.licitante = licitante; } public String getInfoProduto() { return infoProduto; } public void setInfoProduto(String infoProduto) { this.infoProduto = infoProduto; } public String getMarca() { return marca; } public void setMarca(String marca) { this.marca = marca; } public String getMaterial() { return material; } public void setMaterial(String material) { this.material = material; } public String getModelo() { return modelo; } public void setModelo(String modelo) { this.modelo = modelo; } public String getTamanho() { return tamanho; } public void setTamanho(String tamanho) { this.tamanho = tamanho; } public String getLote() { return lote; } public void setLote(String lote) { this.lote = lote; } public String getFabricacao() { return fabricacao; } public void setFabricacao(String fabricacao) { this.fabricacao = fabricacao; } public String getValidade() { return validade; } public void setValidade(String validade) { this.validade = validade; } public String getReferencia() { return referencia; } public void setReferencia(String referencia) { this.referencia = referencia; } public Integer getQuantidade() { return quantidade; } public void setQuantidade(Integer quantidade) { this.quantidade = quantidade; } public String getFormaAvaliacao() { return formaAvaliacao; } public void setFormaAvaliacao(String formaAvaliacao) { this.formaAvaliacao = formaAvaliacao; } public String getEnviadoPara() { return enviadoPara; } public void setEnviadoPara(String enviadoPara) { this.enviadoPara = enviadoPara; } public String getResponsavel() { return responsavel; } public void setResponsavel(String responsavel) { this.responsavel = responsavel; } public String getDataEnvio() { return dataEnvio; } public void setDataEnvio(String dataEnvio) { this.dataEnvio = dataEnvio; } } 
+
+5. FichaRepository.java (Repositório)
+
+Localização: src/main/java/com/example/seath/repository/FichaRepository.java
+
+code Java
+
+downloadcontent_copy
+
+expand_less
+
+package com.example.seath.repository; import com.example.seath.model.Ficha; import org.springframework.data.jpa.repository.JpaRepository; import org.springframework.stereotype.Repository; @Repository public interface FichaRepository extends JpaRepository<Ficha, Long> { } 
+
+6. FichaService.java (Camada de Serviço)
+
+Localização: src/main/java/com/example/seath/service/FichaService.java
+
+code Java
+
+downloadcontent_copy
+
+expand_less
+
+package com.example.seath.service; import com.example.seath.model.Ficha; import com.example.seath.repository.FichaRepository; import fr.opensagres.xdocreport.core.XDocReportException; import fr.opensagres.xdocreport.core.document.IXDocReport; import fr.opensagres.xdocreport.document.registry.XDocReportRegistry; import fr.opensagres.xdocreport.template.IContext; import fr.opensagres.xdocreport.template.TemplateEngineKind; import jakarta.persistence.EntityNotFoundException; import org.springframework.beans.factory.annotation.Autowired; import org.springframework.stereotype.Service; import org.springframework.transaction.annotation.Transactional; import java.io.ByteArrayOutputStream; import java.io.IOException; import java.io.InputStream; import java.util.List; import java.util.Optional; @Service public class FichaService { private final FichaRepository fichaRepository; @Autowired public FichaService(FichaRepository fichaRepository) { this.fichaRepository = fichaRepository; } @Transactional(readOnly = true) public List<Ficha> buscarTodas() { return fichaRepository.findAll(); } @Transactional public Ficha salvar(Ficha ficha) { return fichaRepository.save(ficha); } @Transactional(readOnly = true) public Ficha buscarPorId(Long id) { return fichaRepository.findById(id) .orElseThrow(() -> new EntityNotFoundException("Ficha não encontrada com o ID: " + id)); } public byte[] gerarDocxFicha(Long id) throws IOException, XDocReportException { try (InputStream in = FichaService.class.getResourceAsStream("/templates/docx/template_ficha.docx")) { if (in == null) { throw new IOException("Template 'template_ficha.docx' não encontrado no classpath."); } IXDocReport report = XDocReportRegistry.getRegistry().loadReport(in, TemplateEngineKind.Freemarker); IContext context = report.createContext(); Ficha ficha = buscarPorId(id); context.put("PREGAO", Optional.ofNullable(ficha.getPregao()).orElse("")); context.put("PROCESSO", Optional.ofNullable(ficha.getProcesso()).orElse("")); context.put("ENVIADO_PARA", Optional.ofNullable(ficha.getEnviadoPara()).orElse("")); context.put("RESPONSAVEL", Optional.ofNullable(ficha.getResponsavel()).orElse("")); context.put("LICITANTE", Optional.ofNullable(ficha.getLicitante()).orElse("")); context.put("ITEM", Optional.ofNullable(ficha.getItem()).orElse("")); context.put("MARCA", Optional.ofNullable(ficha.getMarca()).orElse("")); context.put("INFO_AMOSTRA", Optional.ofNullable(ficha.getInfoProduto()).orElse("")); context.put("MATERIAL", Optional.ofNullable(ficha.getMaterial()).orElse("")); context.put("MODELO", Optional.ofNullable(ficha.getModelo()).orElse("")); context.put("TAMANHO", Optional.ofNullable(ficha.getTamanho()).orElse("")); context.put("LOTE", Optional.ofNullable(ficha.getLote()).orElse("")); context.put("FAB", Optional.ofNullable(ficha.getFabricacao()).orElse("")); context.put("VAL", Optional.ofNullable(ficha.getValidade()).orElse("")); context.put("REF", Optional.ofNullable(ficha.getReferencia()).orElse("")); context.put("QUANTIDADE", Optional.ofNullable(ficha.getQuantidade()).orElse(0)); context.put("AVALIACAO", Optional.ofNullable(ficha.getFormaAvaliacao()).orElse("")); context.put("DATA_ENVIO", Optional.ofNullable(ficha.getDataEnvio()).orElse("")); ByteArrayOutputStream out = new ByteArrayOutputStream(); report.process(context, out); return out.toByteArray(); } } } 
+
+7. FichaController.java (Controlador Web)
+
+Localização: src/main/java/com/example/seath/controller/FichaController.java
+
+code Java
+
+downloadcontent_copy
+
+expand_less
+
+package com.example.seath.controller; import com.example.seath.model.Ficha; import com.example.seath.service.FichaService; import jakarta.servlet.http.HttpServletResponse; import org.springframework.beans.factory.annotation.Autowired; import org.springframework.http.HttpHeaders; import org.springframework.http.MediaType; import org.springframework.stereotype.Controller; import org.springframework.ui.Model; import org.springframework.web.bind.annotation.GetMapping; import org.springframework.web.bind.annotation.ModelAttribute; import org.springframework.web.bind.annotation.PathVariable; import org.springframework.web.bind.annotation.PostMapping; import java.io.OutputStream; @Controller public class FichaController { private final FichaService fichaService; @Autowired public FichaController(FichaService fichaService) { this.fichaService = fichaService; } @GetMapping("/") public String paginaInicial(Model model) { model.addAttribute("listaFichas", fichaService.buscarTodas()); model.addAttribute("fichaForm", new Ficha()); return "index"; } @PostMapping("/salvar") public String salvarFicha(@ModelAttribute("fichaForm") Ficha ficha) { fichaService.salvar(ficha); return "redirect:/"; } @GetMapping("/exportar/{id}") public void exportarFicha(@PathVariable("id") Long id, HttpServletResponse response) { try { Ficha ficha = fichaService.buscarPorId(id); byte[] docxBytes = fichaService.gerarDocxFicha(id); String processo = ficha.getProcesso() != null ? ficha.getProcesso().replaceAll("[^a-zA-Z0-9.-]", "_") : "proc"; String item = ficha.getItem() != null ? ficha.getItem().replaceAll("[^a-zA-Z0-9.-]", "_") : "item"; String nomeArquivo = "Ficha_Proc_" + processo + "_Item_" + item + ".docx"; response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE); response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + nomeArquivo + "\""); response.setContentLength(docxBytes.length); try (OutputStream outStream = response.getOutputStream()) { outStream.write(docxBytes); outStream.flush(); } } catch (Exception e) { e.printStackTrace(); response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR); } } } 
+
+8. BrowserLauncher.java (Configuração para Abrir o Navegador)
+
+Localização: src/main/java/com/example/seath/config/BrowserLauncher.java
+
+code Java
+
+downloadcontent_copy
+
+expand_less
+
+package com.example.seath.config; import org.springframework.beans.factory.annotation.Autowired; import org.springframework.boot.context.event.ApplicationReadyEvent; import org.springframework.context.ApplicationListener; import org.springframework.context.annotation.Configuration; import org.springframework.context.annotation.Profile; import org.springframework.core.env.Environment; import java.awt.Desktop; import java.net.URI; @Configuration @Profile("dev") public class BrowserLauncher implements ApplicationListener<ApplicationReadyEvent> { @Autowired private Environment environment; @Override public void onApplicationEvent(ApplicationReadyEvent event) { String port = environment.getProperty("local.server.port", "8080"); String url = "http://localhost:" + port; System.out.println("-------------------------------------------------"); System.out.println("Aplicação iniciada! Abrindo navegador em: " + url); System.out.println("-------------------------------------------------"); if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) { try { Desktop.getDesktop().browse(new URI(url)); } catch (Exception e) { System.err.println("Erro ao tentar abrir o navegador: " + e.getMessage()); } } else { System.err.println("Não foi possível abrir o navegador. Ambiente gráfico não suportado."); } } } 
+
+9. index.html (Template da Página Web)
+
+Localização: src/main/resources/templates/index.html
+
+code Html
+
+play_circledownloadcontent_copy
+
+expand_less
+
+<!DOCTYPE html> <html lang="pt-br"> <head> <meta charset="UTF-8"> <title>Cadastro de Fichas de Produto</title> <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"> <meta name="viewport" content="width=device-width, initial-scale=1"> </head> <body class="bg-light"> <div class="container-fluid mt-4"> <header class="text-center mb-4"> <h1>Controle de Fichas de Produto</h1> <p class="lead">Preencha o formulário para cadastrar uma nova ficha de produto.</p> </header> <!-- Formulário de Cadastro --> <div class="card shadow-sm mb-5"> <div class="card-header bg-primary text-white"> <h4 class="my-1">Cadastrar Nova Ficha</h4> </div> <div class="card-body"> <form id="fichaForm" data-th-action="@{/salvar}" data-th-object="${fichaForm}" method="post"> <div class="row g-3"> <div class="col-md-4"><label for="pregao" class="form-label">Pregão:</label><input type="text" id="pregao" data-th-field="*{pregao}" class="form-control"/></div> <div class="col-md-4"><label for="processo" class="form-label">Processo:</label><input type="text" id="processo" data-th-field="*{processo}" class="form-control"/></div> <div class="col-md-4"><label for="item" class="form-label">Item:</label><input type="text" id="item" data-th-field="*{item}" class="form-control"/></div> <div class="col-md-6"><label for="licitante" class="form-label">Licitante:</label><input type="text" id="licitante" data-th-field="*{licitante}" class="form-control"/></div> <div class="col-md-6"><label for="infoProduto" class="form-label">Info Produto:</label><input type="text" id="infoProduto" data-th-field="*{infoProduto}" class="form-control"/></div> <div class="col-md-3"><label for="marca" class="form-label">Marca:</label><input type="text" id="marca" data-th-field="*{marca}" class="form-control"/></div> <div class="col-md-3"><label for="material" class="form-label">Material:</label><input type="text" id="material" data-th-field="*{material}" class="form-control"/></div> <div class="col-md-3"><label for="modelo" class="form-label">Modelo:</label><input type="text" id="modelo" data-th-field="*{modelo}" class="form-control"/></div> <div class="col-md-3"><label for="tamanho" class="form-label">Tamanho:</label><input type="text" id="tamanho" data-th-field="*{tamanho}" class="form-control"/></div> <div class="col-md-3"><label for="lote" class="form-label">Lote:</label><input type="text" id="lote" data-th-field="*{lote}" class="form-control"/></div> <div class="col-md-3"><label for="fabricacao" class="form-label">Fabricação:</label><input type="date" id="fabricacao" data-th-field="*{fabricacao}" class="form-control"/></div> <div class="col-md-3"><label for="validade" class="form-label">Validade:</label><input type="date" id="validade" data-th-field="*{validade}" class="form-control"/></div> <div class="col-md-3"><label for="referencia" class="form-label">Referência:</label><input type="text" id="referencia" data-th-field="*{referencia}" class="form-control"/></div> <div class="col-md-4"><label for="quantidade" class="form-label">Quantidade:</label><input type="number" id="quantidade" data-th-field="*{quantidade}" class="form-control"/></div> <div class="col-md-8"><label for="formaAvaliacao" class="form-label">Forma de Avaliação:</label><input type="text" id="formaAvaliacao" data-th-field="*{formaAvaliacao}" class="form-control"/></div> <div class="col-md-4"><label for="enviadoPara" class="form-label">Enviado Para:</label><input type="text" id="enviadoPara" data-th-field="*{enviadoPara}" class="form-control"/></div> <div class="col-md-4"><label for="responsavel" class="form-label">Responsável:</label><input type="text" id="responsavel" data-th-field="*{responsavel}" class="form-control"/></div> <div class="col-md-4"><label for="dataEnvio" class="form-label">Data de Envio:</label><input type="date" id="dataEnvio" data-th-field="*{dataEnvio}" class="form-control"/></div> </div> <hr class="my-4"> <button id="saveButton" type="submit" class="w-100 btn btn-primary btn-lg">Salvar Ficha</button> </form> </div> </div> <!-- Tabela de Fichas Cadastradas --> <div class="card shadow-sm"> <div class="card-header"> <h4 class="my-1">Fichas Cadastradas</h4> </div> <div class="card-body p-0"> <div class="table-responsive"> <table class="table table-striped table-hover mb-0"> <thead class="table-dark"> <tr> <th>ID</th> <th>Pregão</th> <th>Processo</th> <th>Item</th> <th>Licitante</th> <th>Produto</th> <th>Marca</th> <th>Qtd.</th> <th>Responsável</th> <th>Data Envio</th> <th>Ações</th> </tr> </thead> <tbody> <th:block data-th-each="ficha : ${listaFichas}"> <tr> <td data-th-text="${ficha.id}"></td> <td data-th-text="${ficha.pregao}"></td> <td data-th-text="${ficha.processo}"></td> <td data-th-text="${ficha.item}"></td> <td data-th-text="${ficha.licitante}"></td> <td data-th-text="${ficha.infoProduto}"></td> <td data-th-text="${ficha.marca}"></td> <td data-th-text="${ficha.quantidade}"></td> <td data-th-text="${ficha.responsavel}"></td> <td data-th-text="${ficha.dataEnvio}"></td> <td> <a class="btn btn-sm btn-success" data-th-href="@{/exportar/{id}(id=${ficha.id})}"> Exportar </a> </td> </tr> </th:block> <th:block data-th-if="${listaFichas.isEmpty()}"> <tr> <td colspan="11" class="text-center text-muted">Nenhuma ficha cadastrada.</td> </tr> </th:block> </tbody> </table> </div> </div> </div> </div> <!-- CÓDIGO JAVASCRIPT --> <script> document.addEventListener('keydown', function (event) { if (event.key === 'Enter') { const activeElement = document.activeElement; if (activeElement.id === 'saveButton' || activeElement.tagName.toLowerCase() === 'textarea') { return; } event.preventDefault(); const form = document.getElementById('fichaForm'); const focusableElements = Array.from( form.querySelectorAll('input, select, textarea, button') ); const currentIndex = focusableElements.indexOf(activeElement); const nextIndex = (currentIndex + 1) % focusableElements.length; const nextElement = focusableElements[nextIndex]; if (nextElement) { nextElement.focus(); } } }); </script> </body> </html> 
+

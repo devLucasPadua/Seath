@@ -1,0 +1,273 @@
+Com certeza! Criar a estrutura de diretórios com um script é uma ótima maneira de começar um novo projeto rapidamente e sem erros.
+
+Forneci abaixo scripts para os três ambientes de linha de comando mais comuns: Linux/macOS (Bash), Windows (Prompt de Comando) e Windows (PowerShell). Escolha o que for mais conveniente para você.
+
+Todos os scripts devem ser executados dentro da pasta raiz do seu projeto (a pasta que contém o arquivo pom.xml, por exemplo, C:\Users\lhuth\Documents\NetBeansProjects\GenySeath).
+
+Para Linux e macOS (Script Bash)
+
+Este é o padrão para sistemas baseados em Unix.
+
+Crie um arquivo chamado criar_diretorios.sh.
+
+Copie e cole o código abaixo nele.
+
+Abra o terminal na pasta do seu projeto e execute o comando: bash criar_diretorios.sh
+
+Arquivo: criar_diretorios.sh
+
+code
+Bash
+download
+content_copy
+expand_less
+#!/bin/bash
+# Script para criar a estrutura de diretórios do projeto Spring Boot.
+
+echo "Criando diretórios para o projeto Seath..."
+
+# Cria a estrutura principal para os fontes Java
+mkdir -p src/main/java/com/example/seath/config
+mkdir -p src/main/java/com/example/seath/controller
+mkdir -p src/main/java/com/example/seath/model
+mkdir -p src/main/java/com/example/seath/repository
+mkdir -p src/main/java/com/example/seath/service
+
+# Cria a estrutura para os recursos (properties, templates, etc.)
+mkdir -p src/main/resources/static/css
+mkdir -p src/main/resources/static/img
+mkdir -p src/main/resources/templates/docx
+
+# Cria a estrutura para os testes
+mkdir -p src/test/java/com/example/seath
+
+echo "Estrutura de diretórios criada com sucesso!"
+Para Windows (Prompt de Comando - CMD)
+
+Este é o script mais simples para Windows. Pode ser executado com um duplo-clique.
+
+Crie um arquivo de texto e renomeie-o para criar_diretorios.bat.
+
+Copie e cole o código abaixo nele.
+
+Execute o arquivo com um duplo-clique ou abra o cmd na pasta do projeto e digite criar_diretorios.bat.
+
+Arquivo: criar_diretorios.bat
+
+code
+Batch
+download
+content_copy
+expand_less
+@echo off
+echo Criando diretorios para o projeto Seath...
+
+:: Cria a estrutura principal para os fontes Java
+md "src\main\java\com\example\seath\config"
+md "src\main\java\com\example\seath\controller"
+md "src\main\java\com\example\seath\model"
+md "src\main\java\com\example\seath\repository"
+md "src\main\java\com\example\seath\service"
+
+:: Cria a estrutura para os recursos (properties, templates, etc.)
+md "src\main\resources\static\css"
+md "src\main\resources\static\img"
+md "src\main\resources\templates\docx"
+
+:: Cria a estrutura para os testes
+md "src\test\java\com\example\seath"
+
+echo Estrutura de diretorios criada com sucesso!
+pause
+
+(A linha pause no final impede que a janela do terminal feche imediatamente, para que você possa ver a mensagem de sucesso.)
+
+Para Windows (PowerShell)
+
+Esta é a abordagem mais moderna e poderosa para automação no Windows.
+
+Crie um arquivo de texto e renomeie-o para criar_diretorios.ps1.
+
+Copie e cole o código abaixo nele.
+
+Para executar: Por padrão, o Windows bloqueia a execução de scripts .ps1. Para rodar, abra o PowerShell na pasta do seu projeto e digite os dois comandos abaixo, um de cada vez:
+
+Set-ExecutionPolicy RemoteSigned -Scope Process (Isso autoriza a execução de scripts apenas nesta janela do PowerShell)
+
+.\criar_diretorios.ps1
+
+Arquivo: criar_diretorios.ps1
+
+code
+Powershell
+download
+content_copy
+expand_less
+Write-Host "Criando diretórios para o projeto Seath..."
+
+# Define a estrutura de diretórios a ser criada
+$folders = @(
+    "src\main\java\com\example\seath\config",
+    "src\main\java\com\example\seath\controller",
+    "src\main\java\com\example\seath\model",
+    "src\main\java\com\example\seath\repository",
+    "src\main\java\com\example\seath\service",
+    "src\main\resources\static\css",
+    "src\main\resources\static\img",
+    "src\main\resources\templates\docx",
+    "src\test\java\com\example\seath"
+)
+
+# Loop que cria cada diretório, incluindo os pais, se necessário
+foreach ($folder in $folders) {
+    if (-not (Test-Path $folder)) {
+        New-Item -ItemType Directory -Force -Path $folder | Out-Null
+    }
+}
+
+Write-Host "Estrutura de diretórios criada com sucesso!"
+Read-Host -Prompt "Pressione Enter para sair"
+
+Excelente observação. Essa é uma prática fundamental para tornar os scripts mais robustos e seguros de se executar várias vezes.
+
+Todos os scripts que eu forneci anteriormente já possuem esse comportamento por padrão, mas vou explicar o porquê e apresentar as versões novamente com comentários claros sobre essa funcionalidade.
+
+1. Linux/macOS (Bash) - Usando mkdir -p
+
+O comando mkdir no Bash tem uma opção -p (de "parent") que é a chave aqui.
+
+mkdir -p caminho/do/diretorio:
+
+Verifica se o diretório caminho/do/diretorio existe.
+
+Se não existe, ele cria o diretório (e todos os diretórios "pai" necessários, como caminho/).
+
+Se o diretório já existe, ele não faz nada e não gera nenhum erro.
+
+O script original já usava mkdir -p, então ele é seguro para ser executado múltiplas vezes.
+
+Arquivo: criar_diretorios.sh (Robusto)
+
+code
+Bash
+download
+content_copy
+expand_less
+#!/bin/bash
+# Script para criar a estrutura de diretórios do projeto Spring Boot.
+# A flag '-p' no comando 'mkdir' garante que os diretórios só sejam criados se não existirem.
+
+echo "Verificando e criando a estrutura de diretórios para o projeto Seath..."
+
+# Cria a estrutura principal para os fontes Java
+mkdir -p src/main/java/com/example/seath/config
+mkdir -p src/main/java/com/example/seath/controller
+mkdir -p src/main/java/com/example/seath/model
+mkdir -p src/main/java/com/example/seath/repository
+mkdir -p src/main/java/com/example/seath/service
+
+# Cria a estrutura para os recursos (properties, templates, etc.)
+mkdir -p src/main/resources/static/css
+mkdir -p src/main/resources/static/img
+mkdir -p src/main/resources/templates/docx
+
+# Cria a estrutura para os testes
+mkdir -p src/test/java/com/example/seath
+
+echo "Estrutura de diretórios verificada/criada com sucesso!"
+2. Windows (Prompt de Comando - CMD)
+
+O comando md (ou mkdir) no Prompt de Comando do Windows se comporta de forma segura por padrão.
+
+md "caminho\do\diretorio":
+
+Tenta criar o diretório diretorio dentro de caminho\do.
+
+Se o diretório já existe, ele simplesmente exibe um aviso ("Subdiretório ou arquivo ... já existe.") e continua para o próximo comando sem sobrescrever nada.
+
+Importante: Ao contrário do mkdir -p, o md padrão não cria diretórios pai. Por isso, a ordem dos comandos é importante, ou precisamos criar o caminho completo de uma vez. O script abaixo já faz isso.
+
+O script original já é seguro, mas podemos melhorá-lo para suprimir a mensagem de "já existe" e parecer mais limpo.
+
+Arquivo: criar_diretorios.bat (Robusto)
+
+code
+Batch
+download
+content_copy
+expand_less
+@echo off
+echo Verificando e criando a estrutura de diretorios para o projeto Seath...
+
+:: O comando 'md' não sobrescreve diretórios existentes.
+:: Ele apenas mostrará um aviso se o diretório já existir e continuará.
+:: Portanto, este script é seguro para ser executado várias vezes.
+
+:: Cria a estrutura principal para os fontes Java
+md "src\main\java\com\example\seath\config" >nul 2>nul
+md "src\main\java\com\example\seath\controller" >nul 2>nul
+md "src\main\java\com\example\seath\model" >nul 2>nul
+md "src/main/java/com/example/seath/repository" >nul 2>nul
+md "src\main\java\com\example\seath\service" >nul 2>nul
+
+:: Cria a estrutura para os recursos (properties, templates, etc.)
+md "src\main\resources\static\css" >nul 2>nul
+md "src\main\resources\static\img" >nul 2>nul
+md "src\main\resources\templates\docx" >nul 2>nul
+
+:: Cria a estrutura para os testes
+md "src\test\java\com\example\seath" >nul 2>nul
+
+echo Estrutura de diretorios verificada/criada com sucesso!
+pause
+
+Melhoria: Adicionei >nul 2>nul para redirecionar qualquer saída (incluindo erros como "já existe") para o "nada", resultando em uma execução mais limpa.
+
+3. Windows (PowerShell)
+
+O script PowerShell que eu forneci anteriormente já é o mais robusto de todos, pois ele explicitamente verifica se o diretório existe antes de tentar criá-lo.
+
+if (-not (Test-Path $folder)) { ... }:
+
+Test-Path $folder retorna true se o caminho existe e false se não existe.
+
+-not inverte o resultado.
+
+Portanto, o comando New-Item para criar o diretório só é executado se Test-Path retornar false, ou seja, apenas se o diretório não existir.
+
+Este é o comportamento exato que você pediu.
+
+Arquivo: criar_diretorios.ps1 (Robusto)
+
+code
+Powershell
+download
+content_copy
+expand_less
+Write-Host "Verificando e criando a estrutura de diretórios para o projeto Seath..."
+
+# Define a estrutura de diretórios a ser criada
+$folders = @(
+    "src\main\java\com\example\seath\config",
+    "src\main\java\com\example\seath\controller",
+    "src\main\java\com\example\seath\model",
+    "src\main\java\com\example\seath\repository",
+    "src\main\java\com\example\seath\service",
+    "src\main\resources\static\css",
+    "src\main\resources\static\img",
+    "src\main\resources\templates\docx",
+    "src-test\java\com\example\seath"
+)
+
+# Loop que verifica cada diretório e o cria somente se ele não existir.
+foreach ($folder in $folders) {
+    if (-not (Test-Path -Path $folder -PathType Container)) {
+        Write-Host "Criando diretório: $folder"
+        New-Item -ItemType Directory -Force -Path $folder | Out-Null
+    }
+}
+
+Write-Host "Estrutura de diretórios verificada/criada com sucesso!"
+Read-Host -Prompt "Pressione Enter para sair"
+
+Melhoria: Adicionei -PathType Container ao Test-Path para garantir que ele está verificando especificamente por um diretório (e não um arquivo com o mesmo nome), e uma mensagem Write-Host para mostrar quais diretórios estão sendo criados.
