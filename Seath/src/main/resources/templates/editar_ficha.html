@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<!-- O xmlns:th foi removido, pois não é necessário com a sintaxe data-th-* -->
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>SEATH - Editar Ficha</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body class="bg-light">
+
+<div class="container mt-5">
+    <header class="text-center mb-4">
+        <h1>SEATH</h1>
+        <p class="lead">Sistema de Engenharia para Análise, Testagem e Hospedagem</p>
+    </header>
+    <div class="card shadow-sm">        
+        <div class="card-header bg-primary text-white">
+            <h4 class="my-1">Editar Ficha de Produto</h4>
+        </div>
+        <div class="card-body">
+            <!-- th:action e th:object foram trocados por data-th-* -->
+            <form action="#" data-th-action="@{/atualizar}" data-th-object="${ficha}" method="post">
+
+                <input type="hidden" data-th-field="*{id}" />
+                <div class="row mb-3">
+                    <label for="id" class="col-sm-2 col-form-label">ID:</label>
+                    <div class="col-sm-10">
+                        <!-- th:value foi trocado por data-th-value -->
+                        <input type="text" readonly class="form-control-plaintext" id="id" data-th-value="*{id}">
+                    </div>
+                </div>
+
+                <div class="row g-3">
+                    <!-- Todos os th:field foram trocados por data-th-field -->
+                    <div class="col-md-4"><label for="pregao" class="form-label">Pregão:</label><input type="text" id="pregao" data-th-field="*{pregao}" class="form-control"/></div>
+                    <div class="col-md-4"><label for="processo" class="form-label">Processo:</label><input type="text" id="processo" data-th-field="*{processo}" class="form-control"/></div>
+                    <div class="col-md-4"><label for="item" class="form-label">Item:</label><input type="text" id="item" data-th-field="*{item}" class="form-control"/></div>
+                    <div class="col-md-6"><label for="licitante" class="form-label">Licitante:</label><input type="text" id="licitante" data-th-field="*{licitante}" class="form-control"/></div>
+                    <div class="col-md-6"><label for="infoProduto" class="form-label">Info Produto:</label><input type="text" id="infoProduto" data-th-field="*{infoProduto}" class="form-control"/></div>
+                    <div class="col-md-3"><label for="marca" class="form-label">Marca:</label><input type="text" id="marca" data-th-field="*{marca}" class="form-control"/></div>
+                    <div class="col-md-3"><label for="material" class="form-label">Material:</label><input type="text" id="material" data-th-field="*{material}" class="form-control"/></div>
+                    <div class="col-md-3"><label for="modelo" class="form-label">Modelo:</label><input type="text" id="modelo" data-th-field="*{modelo}" class="form-control"/></div>
+                    <div class="col-md-3"><label for="tamanho" class="form-label">Tamanho:</label><input type="text" id="tamanho" data-th-field="*{tamanho}" class="form-control"/></div>
+                    <div class="col-md-3"><label for="lote" class="form-label">Lote:</label><input type="text" id="lote" data-th-field="*{lote}" class="form-control"/></div>
+                    
+                    <!-- Correção aplicada nos campos de data -->
+                    <div class="col-md-3">
+                        <label for="fabricacao" class="form-label">Fabricação:</label>
+                        <input type="date" id="fabricacao" name="fabricacao"
+                               data-th-value="${ficha.fabricacao != null ? #temporals.format(ficha.fabricacao, 'yyyy-MM-dd') : ''}" 
+                               class="form-control"/>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="validade" class="form-label">Validade:</label>
+                        <input type="date" id="validade" name="validade"
+                               data-th-value="${ficha.validade != null ? #temporals.format(ficha.validade, 'yyyy-MM-dd') : ''}"
+                               class="form-control"/>
+                    </div>
+                    
+                    <div class="col-md-3"><label for="referencia" class="form-label">Referência:</label><input type="text" id="referencia" data-th-field="*{referencia}" class="form-control"/></div>
+                    <div class="col-md-4"><label for="quantidade" class="form-label">Quantidade:</label><input type="number" id="quantidade" data-th-field="*{quantidade}" class="form-control"/></div>
+                    <div class="col-md-8"><label for="formaAvaliacao" class="form-label">Forma de Avaliação:</label><input type="text" id="formaAvaliacao" data-th-field="*{formaAvaliacao}" class="form-control"/></div>
+                    <div class="col-md-4"><label for="enviadoPara" class="form-label">Enviado Para:</label><input type="text" id="enviadoPara" data-th-field="*{enviadoPara}" class="form-control"/></div>
+                    <div class="col-md-4"><label for="responsavel" class="form-label">Responsável:</label><input type="text" id="responsavel" data-th-field="*{responsavel}" class="form-control"/></div>
+                    
+                    <div class="col-md-4">
+                        <label for="dataEnvio" class="form-label">Data de Envio:</label>
+                        <input type="date" id="dataEnvio" name="dataEnvio"
+                               data-th-value="${ficha.dataEnvio != null ? #temporals.format(ficha.dataEnvio, 'yyyy-MM-dd') : ''}"
+                               class="form-control"/>
+                    </div>
+                </div>
+
+                <hr class="my-4">
+                <div class="d-flex justify-content-end">
+                    <a href="/" class="btn btn-secondary me-2">Cancelar</a>
+                    <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

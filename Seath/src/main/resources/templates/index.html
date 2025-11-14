@@ -2,23 +2,23 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Cadastro de Fichas de Produto</title>
+    <title>SEATH - Cadastro de Fichas</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-        .form-label .form-switch {
-            margin-bottom: -0.3rem;
-        }
+        .form-label .form-switch { margin-bottom: -0.3rem; }
+        /* Adiciona um pequeno espaçamento entre os botões de ação */
+        .actions a:not(:last-child) { margin-right: 0.5rem; }
     </style>
 </head>
 <body class="bg-light">
-
 <div class="container-fluid mt-4">
 
     <!-- ### CABEÇALHO RESTAURADO ### -->
     <header class="text-center mb-4">
-        <h1>Controle de Fichas de Produto</h1>
-        <p class="lead">Preencha o formulário para cadastrar uma nova ficha de produto.</p>
+        <h1>SEATH</h1>
+        <p class="lead">Sistema de Engenharia para Análise, Testagem e Hospedagem</p>
     </header>
 
     <!-- Formulário de Cadastro -->
@@ -64,7 +64,35 @@
                     <tr><th>ID</th><th>Pregão</th><th>Processo</th><th>Item</th><th>Licitante</th><th>Produto</th><th>Marca</th><th>Qtd.</th><th>Responsável</th><th>Data Envio</th><th>Ações</th></tr>
                     </thead>
                     <tbody>
-                        <tr data-th-each="ficha : ${listaFichas}"><td data-th-text="${ficha.id}"></td><td data-th-text="${ficha.pregao}"></td><td data-th-text="${ficha.processo}"></td><td data-th-text="${ficha.item}"></td><td data-th-text="${ficha.licitante}"></td><td data-th-text="${ficha.infoProduto}"></td><td data-th-text="${ficha.marca}"></td><td data-th-text="${ficha.quantidade}"></td><td data-th-text="${ficha.responsavel}"></td><td data-th-text="${#temporals.format(ficha.dataEnvio, 'dd/MM/yyyy')}"></td><td><a class="btn btn-sm btn-success" data-th-href="@{/exportar/{id}(id=${ficha.id})}">Exportar</a></td></tr>
+                        <tr data-th-each="ficha : ${listaFichas}">
+                            <td data-th-text="${ficha.id}"></td>
+                            <td data-th-text="${ficha.pregao}"></td>
+                            <td data-th-text="${ficha.processo}"></td>
+                            <td data-th-text="${ficha.item}"></td>
+                            <td data-th-text="${ficha.licitante}"></td>
+                            <td data-th-text="${ficha.infoProduto}"></td>
+                            <td data-th-text="${ficha.marca}"></td>
+                            <td data-th-text="${ficha.quantidade}"></td>
+                            <td data-th-text="${ficha.responsavel}"></td>
+                            <td data-th-text="${#temporals.format(ficha.dataEnvio, 'dd/MM/yyyy')}"></td>
+                            
+                            <!-- ### ALTERAÇÃO AQUI: ADIÇÃO DO ÍCONE DE EDIÇÃO ### -->
+                            <td class="actions">
+                                <!-- Ícone de Exportar (já existente) -->
+                                <a class="btn btn-sm btn-success" 
+                                   data-th-href="@{/exportar/{id}(id=${ficha.id})}"
+                                   title="Exportar para DOCX">
+                                    <i class="bi bi-file-earmark-arrow-down"></i>
+                                </a>
+                                
+                                <!-- NOVO Ícone de Editar -->
+                                <a class="btn btn-sm btn-primary" 
+                                   data-th-href="@{/editar/{id}(id=${ficha.id})}"
+                                   title="Editar Ficha">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                            </td>
+                        </tr>
                         <tr data-th-if="${listaFichas.isEmpty()}"><td colspan="11" class="text-center text-muted">Nenhuma ficha cadastrada.</td></tr>
                     </tbody>
                 </table>

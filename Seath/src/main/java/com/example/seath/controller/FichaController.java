@@ -39,9 +39,41 @@ public class FichaController {
 
     /**
      * Lida com a requisição GET para exportar uma ficha como DOCX.
+     *
      * @param id O ID da ficha a ser exportada, vindo da URL.
      * @param response O objeto de resposta HTTP para enviar o arquivo.
      */
+
+    // ### NOVO MÉTODO 1: MOSTRAR A TELA DE EDIÇÃO ###
+    /**
+     * Lida com a requisição GET para /editar/{id}. Busca a ficha pelo ID e a
+     * envia para a página de edição.
+     */
+    @GetMapping("/editar/{id}")
+    public String mostrarFormularioDeEdicao(@PathVariable("id") Long id, Model model) {
+        try {
+            Ficha ficha = fichaService.buscarPorId(id);
+            model.addAttribute("ficha", ficha);
+            return "editar_ficha"; // Nome do arquivo HTML de edição
+        } catch (Exception e) {
+            // Se a ficha não for encontrada, redireciona para a página principal
+            return "redirect:/";
+        }
+    }
+
+    // ### NOVO MÉTODO 2: PROCESSAR A ATUALIZAÇÃO ###
+    /**
+     * Lida com a requisição POST de /atualizar. Recebe o objeto Ficha
+     * modificado e o salva.
+     */
+    @PostMapping("/atualizar")
+    public String atualizarFicha(@ModelAttribute("ficha") Ficha ficha) {
+        // O método 'salvar' do service serve tanto para criar (se o ID for nulo)
+        // quanto para atualizar (se o ID já existir).
+        fichaService.salvar(ficha);
+        return "redirect:/"; // Redireciona para a lista principal
+    }
+
     @GetMapping("/exportar/{id}")
     public void exportarFicha(@PathVariable("id") Long id, HttpServletResponse response) {
         try {
