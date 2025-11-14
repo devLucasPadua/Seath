@@ -22,7 +22,6 @@
         <div class="card-body">
             <form id="fichaForm" data-th-action="@{/salvar}" data-th-object="${fichaForm}" method="post">
                 <div class="row g-3">
-                    <!-- Todos os seus inputs do formulário aqui... -->
                     <div class="col-md-4"><label for="pregao" class="form-label">Pregão:</label><input type="text" id="pregao" data-th-field="*{pregao}" class="form-control"/></div>
                     <div class="col-md-4"><label for="processo" class="form-label">Processo:</label><input type="text" id="processo" data-th-field="*{processo}" class="form-control"/></div>
                     <div class="col-md-4"><label for="item" class="form-label">Item:</label><input type="text" id="item" data-th-field="*{item}" class="form-control"/></div>
@@ -72,9 +71,7 @@
                             <td data-th-text="${ficha.marca}"></td>
                             <td data-th-text="${ficha.quantidade}"></td>
                             <td data-th-text="${ficha.responsavel}"></td>
-                            
-                            <td data-th-text="${ficha.dataEnvio}"></td>
-                            
+                            <td data-th-text="${#temporals.format(ficha.dataEnvio, 'dd/MM/yyyy')}"></td>
                             <td>
                                 <a class="btn btn-sm btn-success" data-th-href="@{/exportar/{id}(id=${ficha.id})}">
                                     Exportar

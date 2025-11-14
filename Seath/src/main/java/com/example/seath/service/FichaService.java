@@ -14,10 +14,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.format.DateTimeFormatter; // <-- ADICIONAR ESTE IMPORT
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
-import java.time.LocalDate;
+import java.util.function.Function;
 
 @Service
 public class FichaService {
@@ -29,24 +30,28 @@ public class FichaService {
         this.fichaRepository = fichaRepository;
     }
 
-    // ... métodos buscarTodas(), salvar(), buscarPorId() ...
-    @Transactional(readOnly = true)
     public List<Ficha> buscarTodas() {
         return fichaRepository.findAll();
     }
 
     @Transactional
     public Ficha salvar(Ficha ficha) {
-        return fichaRepository.save(ficha);
+        return fichaRepository.saveAndFlush(ficha);
     }
-
-    @Transactional(readOnly = true)
+    
     public Ficha buscarPorId(Long id) {
         return fichaRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Ficha não encontrada com o ID: " + id));
     }
 
+    /**
+     * Gera um arquivo DOCX a partir de um template e dos dados de uma Ficha.
+     * @param id O ID da Ficha a ser exportada.
+     * @return Um array de bytes contendo o arquivo DOCX gerado.
+     */
     public byte[] gerarDocxFicha(Long id) throws IOException, XDocReportException {
+        // Garanta que seu template esteja em 'src/main/resources/templates/docx/template_ficha.docx'
+        // E que os placeholders nele usem a sintaxe ${PALAVRA}
         try (InputStream in = FichaService.class.getResourceAsStream("/templates/docx/template_ficha.docx")) {
             if (in == null) {
                 throw new IOException("Template 'template_ficha.docx' não encontrado no classpath.");
@@ -56,27 +61,9 @@ public class FichaService {
             IContext context = report.createContext();
             Ficha ficha = buscarPorId(id);
 
-            // --- NOVA LÓGICA DE FORMATAÇÃO PARA STRINGS ---
-            DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
-            /*// 2. Formatar as datas antes de enviá-las ao contexto
-            String fabFormatada = ficha.getFabricacao() != null ? ficha.getFabricacao().format(formatter) : "";
-            String valFormatada = ficha.getValidade() != null ? ficha.getValidade().format(formatter) : "";
-            String dataEnvioFormatada = ficha.getDataEnvio() != null ? ficha.getDataEnvio().format(formatter) : "";*/
-            java.util.function.Function<String, String> formatarData = (dataString) -> {
-                if (dataString == null || dataString.isBlank()) {
-                    return "";
-                }
-                try {
-                    // O banco salva "yyyy-MM-dd", então fazemos o parse e formatamos
-                    LocalDate data = LocalDate.parse(dataString);
-                    return data.format(outputFormatter);
-                } catch (Exception e) {
-                    return dataString; // Se der erro, retorna o valor original
-                }
-            };
-
-            // Mapeia os dados da Ficha
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            Function<LocalDate, String> formatarData = (data) -> data != null ? data.format(formatter) : "";
+            
             context.put("PREGAO", Optional.ofNullable(ficha.getPregao()).orElse(""));
             context.put("PROCESSO", Optional.ofNullable(ficha.getProcesso()).orElse(""));
             context.put("ENVIADO_PARA", Optional.ofNullable(ficha.getEnviadoPara()).orElse(""));

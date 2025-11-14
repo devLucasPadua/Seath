@@ -1,9 +1,11 @@
 package com.example.seath.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import java.time.LocalDate;
 
 @Entity
 public class Ficha {
@@ -20,18 +22,24 @@ public class Ficha {
     private String material;
     private String modelo;
     private String tamanho;
-    private String lote; 
-    private String fabricacao;
-    private String validade;
+    private String lote;
+    
+    @Column(columnDefinition = "TEXT") 
+    private LocalDate fabricacao;
+    
+    @Column(columnDefinition = "TEXT") 
+    private LocalDate validade;
+    
     private String referencia;
     private Integer quantidade;
     private String formaAvaliacao;
     private String enviadoPara;
     private String responsavel;
     
-   private String dataEnvio;
+    @Column(columnDefinition = "TEXT")  
+    private LocalDate dataEnvio;
 
-// Getters e Setters 
+    // Getters e Setters 
     public Long getId() {
         return id;
     }
@@ -120,19 +128,19 @@ public class Ficha {
         this.lote = lote;
     }
 
-    public String getFabricacao() {
+    public LocalDate getFabricacao() {
         return fabricacao;
     }
 
-    public void setFabricacao(String fabricacao) {
+    public void setFabricacao(LocalDate fabricacao) {
         this.fabricacao = fabricacao;
     }
 
-    public String getValidade() {
+    public LocalDate getValidade() {
         return validade;
     }
 
-    public void setValidade(String validade) {
+    public void setValidade(LocalDate validade) {
         this.validade = validade;
     }
 
@@ -176,11 +184,11 @@ public class Ficha {
         this.responsavel = responsavel;
     }
 
-    public String getDataEnvio() {
+    public LocalDate getDataEnvio() {
         return dataEnvio;
     }
 
-    public void setDataEnvio(String dataEnvio) {
+    public void setDataEnvio(LocalDate dataEnvio) {
         this.dataEnvio = dataEnvio;
     }
 }
