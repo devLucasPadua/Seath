@@ -5,10 +5,17 @@
     <title>Cadastro de Fichas de Produto</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        .form-label .form-switch {
+            margin-bottom: -0.3rem;
+        }
+    </style>
 </head>
 <body class="bg-light">
 
 <div class="container-fluid mt-4">
+
+    <!-- ### CABEÇALHO RESTAURADO ### -->
     <header class="text-center mb-4">
         <h1>Controle de Fichas de Produto</h1>
         <p class="lead">Preencha o formulário para cadastrar uma nova ficha de produto.</p>
@@ -22,65 +29,43 @@
         <div class="card-body">
             <form id="fichaForm" data-th-action="@{/salvar}" data-th-object="${fichaForm}" method="post">
                 <div class="row g-3">
-                    <div class="col-md-4"><label for="pregao" class="form-label">Pregão:</label><input type="text" id="pregao" data-th-field="*{pregao}" class="form-control"/></div>
-                    <div class="col-md-4"><label for="processo" class="form-label">Processo:</label><input type="text" id="processo" data-th-field="*{processo}" class="form-control"/></div>
-                    <div class="col-md-4"><label for="item" class="form-label">Item:</label><input type="text" id="item" data-th-field="*{item}" class="form-control"/></div>
-                    <div class="col-md-6"><label for="licitante" class="form-label">Licitante:</label><input type="text" id="licitante" data-th-field="*{licitante}" class="form-control"/></div>
-                    <div class="col-md-6"><label for="infoProduto" class="form-label">Info Produto:</label><input type="text" id="infoProduto" data-th-field="*{infoProduto}" class="form-control"/></div>
-                    <div class="col-md-3"><label for="marca" class="form-label">Marca:</label><input type="text" id="marca" data-th-field="*{marca}" class="form-control"/></div>
-                    <div class="col-md-3"><label for="material" class="form-label">Material:</label><input type="text" id="material" data-th-field="*{material}" class="form-control"/></div>
-                    <div class="col-md-3"><label for="modelo" class="form-label">Modelo:</label><input type="text" id="modelo" data-th-field="*{modelo}" class="form-control"/></div>
-                    <div class="col-md-3"><label for="tamanho" class="form-label">Tamanho:</label><input type="text" id="tamanho" data-th-field="*{tamanho}" class="form-control"/></div>
-                    <div class="col-md-3"><label for="lote" class="form-label">Lote:</label><input type="text" id="lote" data-th-field="*{lote}" class="form-control"/></div>
-                    <div class="col-md-3"><label for="fabricacao" class="form-label">Fabricação:</label><input type="date" id="fabricacao" data-th-field="*{fabricacao}" class="form-control"/></div>
-                    <div class="col-md-3"><label for="validade" class="form-label">Validade:</label><input type="date" id="validade" data-th-field="*{validade}" class="form-control"/></div>
-                    <div class="col-md-3"><label for="referencia" class="form-label">Referência:</label><input type="text" id="referencia" data-th-field="*{referencia}" class="form-control"/></div>
-                    <div class="col-md-4"><label for="quantidade" class="form-label">Quantidade:</label><input type="number" id="quantidade" data-th-field="*{quantidade}" class="form-control"/></div>
-                    <div class="col-md-8"><label for="formaAvaliacao" class="form-label">Forma de Avaliação:</label><input type="text" id="formaAvaliacao" data-th-field="*{formaAvaliacao}" class="form-control"/></div>
-                    <div class="col-md-4"><label for="enviadoPara" class="form-label">Enviado Para:</label><input type="text" id="enviadoPara" data-th-field="*{enviadoPara}" class="form-control"/></div>
-                    <div class="col-md-4"><label for="responsavel" class="form-label">Responsável:</label><input type="text" id="responsavel" data-th-field="*{responsavel}" class="form-control"/></div>
-                    <div class="col-md-4"><label for="dataEnvio" class="form-label">Data de Envio:</label><input type="date" id="dataEnvio" data-th-field="*{dataEnvio}" class="form-control"/></div>
+                    <div class="col-md-4"><label for="pregao" class="form-label"><div class="form-check form-switch d-inline-block align-middle me-1" title="Travar campo"><input class="form-check-input lock-switch" type="checkbox" role="switch" tabindex="-1" data-lock-target="pregao"></div>Pregão:</label><input type="text" id="pregao" data-th-field="*{pregao}" class="form-control"/></div>
+                    <div class="col-md-4"><label for="processo" class="form-label"><div class="form-check form-switch d-inline-block align-middle me-1" title="Travar campo"><input class="form-check-input lock-switch" type="checkbox" role="switch" tabindex="-1" data-lock-target="processo"></div>Processo:</label><input type="text" id="processo" data-th-field="*{processo}" class="form-control"/></div>
+                    <div class="col-md-4"><label for="item" class="form-label"><div class="form-check form-switch d-inline-block align-middle me-1" title="Travar campo"><input class="form-check-input lock-switch" type="checkbox" role="switch" tabindex="-1" data-lock-target="item"></div>Item:</label><input type="text" id="item" data-th-field="*{item}" class="form-control"/></div>
+                    <div class="col-md-6"><label for="licitante" class="form-label"><div class="form-check form-switch d-inline-block align-middle me-1" title="Travar campo"><input class="form-check-input lock-switch" type="checkbox" role="switch" tabindex="-1" data-lock-target="licitante"></div>Licitante:</label><input type="text" id="licitante" data-th-field="*{licitante}" class="form-control"/></div>
+                    <div class="col-md-6"><label for="infoProduto" class="form-label"><div class="form-check form-switch d-inline-block align-middle me-1" title="Travar campo"><input class="form-check-input lock-switch" type="checkbox" role="switch" tabindex="-1" data-lock-target="infoProduto"></div>Info Produto:</label><input type="text" id="infoProduto" data-th-field="*{infoProduto}" class="form-control"/></div>
+                    <div class="col-md-3"><label for="marca" class="form-label"><div class="form-check form-switch d-inline-block align-middle me-1" title="Travar campo"><input class="form-check-input lock-switch" type="checkbox" role="switch" tabindex="-1" data-lock-target="marca"></div>Marca:</label><input type="text" id="marca" data-th-field="*{marca}" class="form-control"/></div>
+                    <div class="col-md-3"><label for="material" class="form-label"><div class="form-check form-switch d-inline-block align-middle me-1" title="Travar campo"><input class="form-check-input lock-switch" type="checkbox" role="switch" tabindex="-1" data-lock-target="material"></div>Material:</label><input type="text" id="material" data-th-field="*{material}" class="form-control"/></div>
+                    <div class="col-md-3"><label for="modelo" class="form-label"><div class="form-check form-switch d-inline-block align-middle me-1" title="Travar campo"><input class="form-check-input lock-switch" type="checkbox" role="switch" tabindex="-1" data-lock-target="modelo"></div>Modelo:</label><input type="text" id="modelo" data-th-field="*{modelo}" class="form-control"/></div>
+                    <div class="col-md-3"><label for="tamanho" class="form-label"><div class="form-check form-switch d-inline-block align-middle me-1" title="Travar campo"><input class="form-check-input lock-switch" type="checkbox" role="switch" tabindex="-1" data-lock-target="tamanho"></div>Tamanho:</label><input type="text" id="tamanho" data-th-field="*{tamanho}" class="form-control"/></div>
+                    <div class="col-md-3"><label for="lote" class="form-label"><div class="form-check form-switch d-inline-block align-middle me-1" title="Travar campo"><input class="form-check-input lock-switch" type="checkbox" role="switch" tabindex="-1" data-lock-target="lote"></div>Lote:</label><input type="text" id="lote" data-th-field="*{lote}" class="form-control"/></div>
+                    <div class="col-md-3"><label for="fabricacao" class="form-label"><div class="form-check form-switch d-inline-block align-middle me-1" title="Travar campo"><input class="form-check-input lock-switch" type="checkbox" role="switch" tabindex="-1" data-lock-target="fabricacao"></div>Fabricação:</label><input type="date" id="fabricacao" data-th-field="*{fabricacao}" class="form-control"/></div>
+                    <div class="col-md-3"><label for="validade" class="form-label"><div class="form-check form-switch d-inline-block align-middle me-1" title="Travar campo"><input class="form-check-input lock-switch" type="checkbox" role="switch" tabindex="-1" data-lock-target="validade"></div>Validade:</label><input type="date" id="validade" data-th-field="*{validade}" class="form-control"/></div>
+                    <div class="col-md-3"><label for="referencia" class="form-label"><div class="form-check form-switch d-inline-block align-middle me-1" title="Travar campo"><input class="form-check-input lock-switch" type="checkbox" role="switch" tabindex="-1" data-lock-target="referencia"></div>Referência:</label><input type="text" id="referencia" data-th-field="*{referencia}" class="form-control"/></div>
+                    <div class="col-md-4"><label for="quantidade" class="form-label"><div class="form-check form-switch d-inline-block align-middle me-1" title="Travar campo"><input class="form-check-input lock-switch" type="checkbox" role="switch" tabindex="-1" data-lock-target="quantidade"></div>Quantidade:</label><input type="number" id="quantidade" data-th-field="*{quantidade}" class="form-control"/></div>
+                    <div class="col-md-8"><label for="formaAvaliacao" class="form-label"><div class="form-check form-switch d-inline-block align-middle me-1" title="Travar campo"><input class="form-check-input lock-switch" type="checkbox" role="switch" tabindex="-1" data-lock-target="formaAvaliacao"></div>Forma de Avaliação:</label><input type="text" id="formaAvaliacao" data-th-field="*{formaAvaliacao}" class="form-control"/></div>
+                    <div class="col-md-4"><label for="enviadoPara" class="form-label"><div class="form-check form-switch d-inline-block align-middle me-1" title="Travar campo"><input class="form-check-input lock-switch" type="checkbox" role="switch" tabindex="-1" data-lock-target="enviadoPara"></div>Enviado Para:</label><input type="text" id="enviadoPara" data-th-field="*{enviadoPara}" class="form-control"/></div>
+                    <div class="col-md-4"><label for="responsavel" class="form-label"><div class="form-check form-switch d-inline-block align-middle me-1" title="Travar campo"><input class="form-check-input lock-switch" type="checkbox" role="switch" tabindex="-1" data-lock-target="responsavel"></div>Responsável:</label><input type="text" id="responsavel" data-th-field="*{responsavel}" class="form-control"/></div>
+                    <div class="col-md-4"><label for="dataEnvio" class="form-label"><div class="form-check form-switch d-inline-block align-middle me-1" title="Travar campo"><input class="form-check-input lock-switch" type="checkbox" role="switch" tabindex="-1" data-lock-target="dataEnvio"></div>Data de Envio:</label><input type="date" id="dataEnvio" data-th-field="*{dataEnvio}" class="form-control"/></div>
                 </div>
                 <hr class="my-4">
                 <button id="saveButton" type="submit" class="w-100 btn btn-primary btn-lg">Salvar Ficha</button>
             </form>
         </div>
     </div>
-
+    
     <!-- Tabela de Fichas Cadastradas -->
     <div class="card shadow-sm">
-        <div class="card-header">
-            <h4 class="my-1">Fichas Cadastradas</h4>
-        </div>
+        <div class="card-header"><h4 class="my-1">Fichas Cadastradas</h4></div>
         <div class="card-body p-0">
             <div class="table-responsive">
                 <table class="table table-striped table-hover mb-0">
                     <thead class="table-dark">
-                    <tr>
-                        <th>ID</th><th>Pregão</th><th>Processo</th><th>Item</th><th>Licitante</th><th>Produto</th><th>Marca</th><th>Qtd.</th><th>Responsável</th><th>Data Envio</th><th>Ações</th>
-                    </tr>
+                    <tr><th>ID</th><th>Pregão</th><th>Processo</th><th>Item</th><th>Licitante</th><th>Produto</th><th>Marca</th><th>Qtd.</th><th>Responsável</th><th>Data Envio</th><th>Ações</th></tr>
                     </thead>
                     <tbody>
-                        <tr data-th-each="ficha : ${listaFichas}">
-                            <td data-th-text="${ficha.id}"></td>
-                            <td data-th-text="${ficha.pregao}"></td>
-                            <td data-th-text="${ficha.processo}"></td>
-                            <td data-th-text="${ficha.item}"></td>
-                            <td data-th-text="${ficha.licitante}"></td>
-                            <td data-th-text="${ficha.infoProduto}"></td>
-                            <td data-th-text="${ficha.marca}"></td>
-                            <td data-th-text="${ficha.quantidade}"></td>
-                            <td data-th-text="${ficha.responsavel}"></td>
-                            <td data-th-text="${#temporals.format(ficha.dataEnvio, 'dd/MM/yyyy')}"></td>
-                            <td>
-                                <a class="btn btn-sm btn-success" data-th-href="@{/exportar/{id}(id=${ficha.id})}">
-                                    Exportar
-                                </a>
-                            </td>
-                        </tr>
-                        <tr data-th-if="${listaFichas.isEmpty()}">
-                            <td colspan="11" class="text-center text-muted">Nenhuma ficha cadastrada.</td>
-                        </tr>
+                        <tr data-th-each="ficha : ${listaFichas}"><td data-th-text="${ficha.id}"></td><td data-th-text="${ficha.pregao}"></td><td data-th-text="${ficha.processo}"></td><td data-th-text="${ficha.item}"></td><td data-th-text="${ficha.licitante}"></td><td data-th-text="${ficha.infoProduto}"></td><td data-th-text="${ficha.marca}"></td><td data-th-text="${ficha.quantidade}"></td><td data-th-text="${ficha.responsavel}"></td><td data-th-text="${#temporals.format(ficha.dataEnvio, 'dd/MM/yyyy')}"></td><td><a class="btn btn-sm btn-success" data-th-href="@{/exportar/{id}(id=${ficha.id})}">Exportar</a></td></tr>
+                        <tr data-th-if="${listaFichas.isEmpty()}"><td colspan="11" class="text-center text-muted">Nenhuma ficha cadastrada.</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -88,19 +73,70 @@
     </div>
 </div>
 
-<!-- CÓDIGO JAVASCRIPT -->
+<!-- SCRIPT COMPLETO E CORRIGIDO -->
 <script>
+    const form = document.getElementById('fichaForm');
+
+    function isLocked(elementId) {
+        if (!elementId) return false;
+        const switchEl = document.querySelector(`.lock-switch[data-lock-target="${elementId}"]`);
+        return switchEl && switchEl.checked;
+    }
+
+    form.addEventListener('submit', function () {
+        const lockedFields = {};
+        const switches = document.querySelectorAll('.lock-switch:checked');
+        switches.forEach(switchEl => {
+            const targetId = switchEl.dataset.lockTarget;
+            const inputEl = document.getElementById(targetId);
+            if (inputEl) {
+                lockedFields[targetId] = inputEl.value;
+            }
+        });
+        sessionStorage.setItem('lockedFields', JSON.stringify(lockedFields));
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const lockedFieldsJSON = sessionStorage.getItem('lockedFields');
+        if (lockedFieldsJSON) {
+            const lockedFields = JSON.parse(lockedFieldsJSON);
+            for (const targetId in lockedFields) {
+                const inputEl = document.getElementById(targetId);
+                const switchEl = document.querySelector(`.lock-switch[data-lock-target="${targetId}"]`);
+                if (inputEl) {
+                    inputEl.value = lockedFields[targetId];
+                }
+                if (switchEl) {
+                    switchEl.checked = true;
+                }
+            }
+        }
+    });
+
     document.addEventListener('keydown', function (event) {
-        if (event.key === 'Enter') {
-            const activeElement = document.activeElement;
-            if (activeElement.id === 'saveButton' || activeElement.tagName.toLowerCase() === 'textarea') { return; }
-            event.preventDefault();
-            const form = document.getElementById('fichaForm');
-            const focusableElements = Array.from(form.querySelectorAll('input, select, textarea, button'));
-            const currentIndex = focusableElements.indexOf(activeElement);
-            const nextIndex = (currentIndex + 1) % focusableElements.length;
-            const nextElement = focusableElements[nextIndex];
-            if (nextElement) { nextElement.focus(); }
+        if (event.key !== 'Enter' && event.key !== 'Tab') {
+            return;
+        }
+        const activeElement = document.activeElement;
+        if (activeElement.id === 'saveButton' || activeElement.tagName.toLowerCase() === 'textarea') {
+            return;
+        }
+        event.preventDefault();
+        const focusableElements = Array.from(
+            form.querySelectorAll('input:not(.lock-switch), select, textarea, button')
+        );
+        const currentIndex = focusableElements.indexOf(activeElement);
+        let nextIndex = currentIndex;
+        const direction = event.shiftKey ? -1 : 1;
+        do {
+            nextIndex = (nextIndex + direction + focusableElements.length) % focusableElements.length;
+            if (nextIndex === currentIndex) {
+                break;
+            }
+        } while (isLocked(focusableElements[nextIndex].id));
+        const nextElement = focusableElements[nextIndex];
+        if (nextElement) {
+            nextElement.focus();
         }
     });
 </script>
