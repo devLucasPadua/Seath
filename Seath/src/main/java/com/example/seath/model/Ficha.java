@@ -7,6 +7,9 @@ import jakarta.persistence.Id;
 import java.time.LocalDate;
 import jakarta.persistence.Column;
 
+import com.example.seath.model.converter.LocalDateConverter;
+import jakarta.persistence.Convert;
+
 @Entity
 public class Ficha {
 
@@ -23,9 +26,10 @@ public class Ficha {
     private String modelo;
     private String tamanho;
     private String lote;
-
-    private LocalDate fabricacao;
     
+    @Convert(converter = LocalDateConverter.class)
+    private LocalDate fabricacao;
+    @Convert(converter = LocalDateConverter.class)
     private LocalDate validade;
     
     private String referencia;
@@ -33,7 +37,8 @@ public class Ficha {
     private String formaAvaliacao;
     private String enviadoPara;
     private String responsavel;
- 
+    
+    @Convert(converter = LocalDateConverter.class)
     private LocalDate dataEnvio;
 
 // Getters e Setters 
