@@ -4,11 +4,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import java.time.LocalDate;
-import jakarta.persistence.Column;
-
-import com.example.seath.model.converter.LocalDateConverter;
-import jakarta.persistence.Convert;
 
 @Entity
 public class Ficha {
@@ -25,21 +20,16 @@ public class Ficha {
     private String material;
     private String modelo;
     private String tamanho;
-    private String lote;
-    
-    @Convert(converter = LocalDateConverter.class)
-    private LocalDate fabricacao;
-    @Convert(converter = LocalDateConverter.class)
-    private LocalDate validade;
-    
+    private String lote; 
+    private String fabricacao;
+    private String validade;
     private String referencia;
     private Integer quantidade;
     private String formaAvaliacao;
     private String enviadoPara;
     private String responsavel;
     
-    @Convert(converter = LocalDateConverter.class)
-    private LocalDate dataEnvio;
+   private String dataEnvio;
 
 // Getters e Setters 
     public Long getId() {
@@ -130,19 +120,19 @@ public class Ficha {
         this.lote = lote;
     }
 
-    public LocalDate getFabricacao() {
+    public String getFabricacao() {
         return fabricacao;
     }
 
-    public void setFabricacao(LocalDate fabricacao) {
+    public void setFabricacao(String fabricacao) {
         this.fabricacao = fabricacao;
     }
 
-    public LocalDate getValidade() {
+    public String getValidade() {
         return validade;
     }
 
-    public void setValidade(LocalDate validade) {
+    public void setValidade(String validade) {
         this.validade = validade;
     }
 
@@ -186,11 +176,11 @@ public class Ficha {
         this.responsavel = responsavel;
     }
 
-    public LocalDate getDataEnvio() {
+    public String getDataEnvio() {
         return dataEnvio;
     }
 
-    public void setDataEnvio(LocalDate dataEnvio) {
+    public void setDataEnvio(String dataEnvio) {
         this.dataEnvio = dataEnvio;
     }
 }

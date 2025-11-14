@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!-- O 'xmlns:th' é removido para satisfazer a IDE, já que usaremos 'data-th-*' -->
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
@@ -15,7 +14,7 @@
         <p class="lead">Preencha o formulário para cadastrar uma nova ficha de produto.</p>
     </header>
 
-    <!-- Formulário de Cadastro com atributos data-th-* -->
+    <!-- Formulário de Cadastro -->
     <div class="card shadow-sm mb-5">
         <div class="card-header bg-primary text-white">
             <h4 class="my-1">Cadastrar Nova Ficha</h4>
@@ -23,6 +22,7 @@
         <div class="card-body">
             <form id="fichaForm" data-th-action="@{/salvar}" data-th-object="${fichaForm}" method="post">
                 <div class="row g-3">
+                    <!-- Todos os seus inputs do formulário aqui... -->
                     <div class="col-md-4"><label for="pregao" class="form-label">Pregão:</label><input type="text" id="pregao" data-th-field="*{pregao}" class="form-control"/></div>
                     <div class="col-md-4"><label for="processo" class="form-label">Processo:</label><input type="text" id="processo" data-th-field="*{processo}" class="form-control"/></div>
                     <div class="col-md-4"><label for="item" class="form-label">Item:</label><input type="text" id="item" data-th-field="*{item}" class="form-control"/></div>
@@ -48,7 +48,7 @@
         </div>
     </div>
 
-    <!-- Tabela de Fichas Cadastradas com atributos data-th-* -->
+    <!-- Tabela de Fichas Cadastradas -->
     <div class="card shadow-sm">
         <div class="card-header">
             <h4 class="my-1">Fichas Cadastradas</h4>
@@ -58,17 +58,7 @@
                 <table class="table table-striped table-hover mb-0">
                     <thead class="table-dark">
                     <tr>
-                        <th>ID</th>
-                        <th>Pregão</th>
-                        <th>Processo</th>
-                        <th>Item</th>
-                        <th>Licitante</th>
-                        <th>Produto</th>
-                        <th>Marca</th>
-                        <th>Qtd.</th>
-                        <th>Responsável</th>
-                        <th>Data Envio</th>
-                        <th>Ações</th>
+                        <th>ID</th><th>Pregão</th><th>Processo</th><th>Item</th><th>Licitante</th><th>Produto</th><th>Marca</th><th>Qtd.</th><th>Responsável</th><th>Data Envio</th><th>Ações</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -82,7 +72,9 @@
                             <td data-th-text="${ficha.marca}"></td>
                             <td data-th-text="${ficha.quantidade}"></td>
                             <td data-th-text="${ficha.responsavel}"></td>
-                            <td data-th-text="${#temporals.format(ficha.dataEnvio, 'dd/MM/yyyy')}"></td>
+                            
+                            <td data-th-text="${ficha.dataEnvio}"></td>
+                            
                             <td>
                                 <a class="btn btn-sm btn-success" data-th-href="@{/exportar/{id}(id=${ficha.id})}">
                                     Exportar
@@ -99,25 +91,19 @@
     </div>
 </div>
 
-<!-- CÓDIGO JAVASCRIPT (não precisa de alterações) -->
+<!-- CÓDIGO JAVASCRIPT -->
 <script>
     document.addEventListener('keydown', function (event) {
         if (event.key === 'Enter') {
             const activeElement = document.activeElement;
-            if (activeElement.id === 'saveButton' || activeElement.tagName.toLowerCase() === 'textarea') {
-                return;
-            }
+            if (activeElement.id === 'saveButton' || activeElement.tagName.toLowerCase() === 'textarea') { return; }
             event.preventDefault();
             const form = document.getElementById('fichaForm');
-            const focusableElements = Array.from(
-                form.querySelectorAll('input, select, textarea, button')
-            );
+            const focusableElements = Array.from(form.querySelectorAll('input, select, textarea, button'));
             const currentIndex = focusableElements.indexOf(activeElement);
             const nextIndex = (currentIndex + 1) % focusableElements.length;
             const nextElement = focusableElements[nextIndex];
-            if (nextElement) {
-                nextElement.focus();
-            }
+            if (nextElement) { nextElement.focus(); }
         }
     });
 </script>
