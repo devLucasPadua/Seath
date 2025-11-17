@@ -6,6 +6,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import java.time.LocalDate;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 @Entity
 public class Ficha {
@@ -15,6 +17,7 @@ public class Ficha {
     private Long id;
     private String pregao;
     private String processo;
+    private String nomePregao;
     private String item;
     private String licitante;
     private String infoProduto;
@@ -39,156 +42,58 @@ public class Ficha {
     @Column(columnDefinition = "TEXT")  
     private LocalDate dataEnvio;
 
-    // Getters e Setters 
-    public Long getId() {
-        return id;
+    public boolean isEmpty() {
+        return Stream.of(
+                pregao, processo, nomePregao, item, licitante, infoProduto, marca, material,
+                modelo, tamanho, lote, fabricacao, validade, referencia, quantidade,
+                formaAvaliacao, enviadoPara, responsavel, dataEnvio
+        ).allMatch(field -> {
+            if (field instanceof String) {
+                return ((String) field).isBlank();
+            }
+            return Objects.isNull(field);
+        });
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getPregao() {
-        return pregao;
-    }
-
-    public void setPregao(String pregao) {
-        this.pregao = pregao;
-    }
-
-    public String getProcesso() {
-        return processo;
-    }
-
-    public void setProcesso(String processo) {
-        this.processo = processo;
-    }
-
-    public String getItem() {
-        return item;
-    }
-
-    public void setItem(String item) {
-        this.item = item;
-    }
-
-    public String getLicitante() {
-        return licitante;
-    }
-
-    public void setLicitante(String licitante) {
-        this.licitante = licitante;
-    }
-
-    public String getInfoProduto() {
-        return infoProduto;
-    }
-
-    public void setInfoProduto(String infoProduto) {
-        this.infoProduto = infoProduto;
-    }
-
-    public String getMarca() {
-        return marca;
-    }
-
-    public void setMarca(String marca) {
-        this.marca = marca;
-    }
-
-    public String getMaterial() {
-        return material;
-    }
-
-    public void setMaterial(String material) {
-        this.material = material;
-    }
-
-    public String getModelo() {
-        return modelo;
-    }
-
-    public void setModelo(String modelo) {
-        this.modelo = modelo;
-    }
-
-    public String getTamanho() {
-        return tamanho;
-    }
-
-    public void setTamanho(String tamanho) {
-        this.tamanho = tamanho;
-    }
-
-    public String getLote() {
-        return lote;
-    }
-
-    public void setLote(String lote) {
-        this.lote = lote;
-    }
-
-    public LocalDate getFabricacao() {
-        return fabricacao;
-    }
-
-    public void setFabricacao(LocalDate fabricacao) {
-        this.fabricacao = fabricacao;
-    }
-
-    public LocalDate getValidade() {
-        return validade;
-    }
-
-    public void setValidade(LocalDate validade) {
-        this.validade = validade;
-    }
-
-    public String getReferencia() {
-        return referencia;
-    }
-
-    public void setReferencia(String referencia) {
-        this.referencia = referencia;
-    }
-
-    public Integer getQuantidade() {
-        return quantidade;
-    }
-
-    public void setQuantidade(Integer quantidade) {
-        this.quantidade = quantidade;
-    }
-
-    public String getFormaAvaliacao() {
-        return formaAvaliacao;
-    }
-
-    public void setFormaAvaliacao(String formaAvaliacao) {
-        this.formaAvaliacao = formaAvaliacao;
-    }
-
-    public String getEnviadoPara() {
-        return enviadoPara;
-    }
-
-    public void setEnviadoPara(String enviadoPara) {
-        this.enviadoPara = enviadoPara;
-    }
-
-    public String getResponsavel() {
-        return responsavel;
-    }
-
-    public void setResponsavel(String responsavel) {
-        this.responsavel = responsavel;
-    }
-
-    public LocalDate getDataEnvio() {
-        return dataEnvio;
-    }
-
-    public void setDataEnvio(LocalDate dataEnvio) {
-        this.dataEnvio = dataEnvio;
-    }
+    // Getters e Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public String getPregao() { return pregao; }
+    public void setPregao(String pregao) { this.pregao = pregao; }
+    public String getProcesso() { return processo; }
+    public void setProcesso(String processo) { this.processo = processo; }
+    public String getNomePregao() { return nomePregao; }
+    public void setNomePregao(String nomePregao) { this.nomePregao = nomePregao; }
+    public String getItem() { return item; }
+    public void setItem(String item) { this.item = item; }
+    public String getLicitante() { return licitante; }
+    public void setLicitante(String licitante) { this.licitante = licitante; }
+    public String getInfoProduto() { return infoProduto; }
+    public void setInfoProduto(String infoProduto) { this.infoProduto = infoProduto; }
+    public String getMarca() { return marca; }
+    public void setMarca(String marca) { this.marca = marca; }
+    public String getMaterial() { return material; }
+    public void setMaterial(String material) { this.material = material; }
+    public String getModelo() { return modelo; }
+    public void setModelo(String modelo) { this.modelo = modelo; }
+    public String getTamanho() { return tamanho; }
+    public void setTamanho(String tamanho) { this.tamanho = tamanho; }
+    public String getLote() { return lote; }
+    public void setLote(String lote) { this.lote = lote; }
+    public LocalDate getFabricacao() { return fabricacao; }
+    public void setFabricacao(LocalDate fabricacao) { this.fabricacao = fabricacao; }
+    public LocalDate getValidade() { return validade; }
+    public void setValidade(LocalDate validade) { this.validade = validade; }
+    public String getReferencia() { return referencia; }
+    public void setReferencia(String referencia) { this.referencia = referencia; }
+    public Integer getQuantidade() { return quantidade; }
+    public void setQuantidade(Integer quantidade) { this.quantidade = quantidade; }
+    public String getFormaAvaliacao() { return formaAvaliacao; }
+    public void setFormaAvaliacao(String formaAvaliacao) { this.formaAvaliacao = formaAvaliacao; }
+    public String getEnviadoPara() { return enviadoPara; }
+    public void setEnviadoPara(String enviadoPara) { this.enviadoPara = enviadoPara; }
+    public String getResponsavel() { return responsavel; }
+    public void setResponsavel(String responsavel) { this.responsavel = responsavel; }
+    public LocalDate getDataEnvio() { return dataEnvio; }
+    public void setDataEnvio(LocalDate dataEnvio) { this.dataEnvio = dataEnvio; }
 }
