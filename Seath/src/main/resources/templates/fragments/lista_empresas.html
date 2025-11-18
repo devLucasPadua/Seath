@@ -1,7 +1,3 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<body>
-
 <div data-th-fragment="listaEmpresas">
     <div class="list-group">
         <a href="#" class="list-group-item list-group-item-action" data-th-each="empresa : ${listaEmpresas}" onclick="return false;">
@@ -11,6 +7,3 @@
     </div>
     <p data-th-if="${listaEmpresas.isEmpty()}" class="text-muted mt-2">Nenhuma empresa encontrada.</p>
 </div>
-
-</body>
-</html>

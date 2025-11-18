@@ -6,12 +6,13 @@
         <div class="card shadow-sm mb-5">
             <div class="card-header bg-primary text-white"><h4 class="my-1">Cadastrar Nova Empresa</h4></div>
             <div class="card-body">
+                <!-- CORREÇÃO APLICADA: data-hx-on-htmx-after-request -->
                 <form id="empresaForm"
                       data-th-object="${empresaForm}"
                       data-hx-post="/api/empresas/salvar"
                       data-hx-target="#form-messages"
                       data-hx-swap="innerHTML"
-                      data-hx-on:htmx:after-request="if(event.detail.successful) { this.reset(); htmx.trigger('#empresa-list-container', 'loadList'); }">
+                      data-hx-on-htmx-after-request="if(event.detail.successful) { this.reset(); htmx.trigger('body', 'loadList'); }">
                     
                     <div id="form-messages"></div>
                     <div class="row g-3">
