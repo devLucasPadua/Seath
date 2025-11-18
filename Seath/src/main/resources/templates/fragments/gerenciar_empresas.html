@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<body>
+<div class="row" data-th-fragment="gerenciarEmpresas">
+    <div class="col-lg-8">
+        <div class="card shadow-sm mb-5">
+            <div class="card-header bg-primary text-white"><h4 class="my-1">Cadastrar Nova Empresa</h4></div>
+            <div class="card-body">
+                <form id="empresaForm"
+                      data-th-object="${empresaForm}"
+                      data-hx-post="/api/empresas/salvar"
+                      data-hx-target="#form-messages"
+                      data-hx-swap="innerHTML"
+                      data-hx-on:htmx:after-request="if(event.detail.successful) { this.reset(); htmx.trigger('#empresa-list-container', 'loadList'); }">
+                    
+                    <div id="form-messages"></div>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="nome" class="form-label">Nome da Empresa:</label>
+                            <input type="text" id="nome" data-th-field="*{nome}" class="form-control" autocomplete="off"/>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="cnpj" class="form-label">CNPJ:</label>
+                            <input type="text" id="cnpj" data-th-field="*{cnpj}" class="form-control" autocomplete="off"/>
+                        </div>
+                    </div>
+                    <hr class="my-4">
+                    <button type="submit" class="w-100 btn btn-primary btn-lg">Salvar Empresa</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card shadow-sm mb-5">
+            <div class="card-header"><h4 class="my-1">Empresas Cadastradas</h4></div>
+            <div class="card-body">
+                <input type="search" id="searchEmpresa" class="form-control mb-3" placeholder="Pesquisar..." 
+                       data-hx-get="/view/empresas/lista" 
+                       data-hx-trigger="keyup changed delay:500ms, loadList from body" 
+                       data-hx-target="#empresa-list-container"
+                       name="termoBusca">
+                <div id="empresa-list-container" data-th-replace="~{fragments/lista_empresas :: listaEmpresas}"></div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

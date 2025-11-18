@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<body>
+
+<!-- O CSS do Choices é carregado apenas quando este fragmento é necessário -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css"/>
+
+<!-- th:fragment define o container do fragmento -->
+<div class="row align-items-stretch" data-th-fragment="formCadastro">
+    <!-- Coluna do Formulário Principal -->
+    <div class="col-lg-9 d-flex">
+        <div id="main-form-card" class="card shadow-sm mb-5 w-100">
+            <div class="card-header bg-primary text-white"><h4 class="my-1">Cadastrar Nova Ficha</h4></div>
+            <div class="card-body">
+                <form id="fichaForm" data-th-action="@{/salvar}" data-th-object="${fichaForm}" method="post">
+                    <div class="form-check form-switch d-inline-block mb-2" title="Travar campos de Pregão/Processo">
+                        <input class="form-check-input" type="checkbox" role="switch" id="lockPregaoGroup">
+                        <label class="form-check-label" for="lockPregaoGroup">Travar campos de Pregão/Processo</label>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-md-4"><label for="pregao" class="form-label">Nº do Pregão:</label><input type="text" id="pregao" data-th-field="*{pregao}" class="form-control" readonly/></div>
+                        <div class="col-md-4"><label for="nomePregao" class="form-label">Nome do Pregão:</label><input type="text" id="nomePregao" data-th-field="*{nomePregao}" class="form-control" readonly/></div>
+                        <div class="col-md-4"><label for="processo" class="form-label">Processo:</label><input type="text" id="processo" data-th-field="*{processo}" class="form-control" readonly/></div>
+                        <div class="col-md-4"><label for="item" class="form-label"><div class="form-check form-switch d-inline-block align-middle me-1" title="Travar campo"><input class="form-check-input lock-switch" type="checkbox" role="switch" tabindex="-1" data-lock-target="item"></div>Item:</label><input type="text" id="item" data-th-field="*{item}" class="form-control"/></div>
+                        <div class="col-md-6"><label for="licitante" class="form-label"><div class="form-check form-switch d-inline-block align-middle me-1" title="Travar campo"><input class="form-check-input lock-switch" type="checkbox" role="switch" tabindex="-1" data-lock-target="licitante"></div>Licitante:</label><input type="text" id="licitante" data-th-field="*{licitante}" class="form-control" readonly/></div>
+                        <div class="col-md-6"><label for="infoProduto" class="form-label"><div class="form-check form-switch d-inline-block align-middle me-1" title="Travar campo"><input class="form-check-input lock-switch" type="checkbox" role="switch" tabindex="-1" data-lock-target="infoProduto"></div>Info Produto:</label><input type="text" id="infoProduto" data-th-field="*{infoProduto}" class="form-control"/></div>
+                        <div class="col-md-3"><label for="marca" class="form-label"><div class="form-check form-switch d-inline-block align-middle me-1" title="Travar campo"><input class="form-check-input lock-switch" type="checkbox" role="switch" tabindex="-1" data-lock-target="marca"></div>Marca:</label><input type="text" id="marca" data-th-field="*{marca}" class="form-control"/></div>
+                        <div class="col-md-3"><label for="material" class="form-label"><div class="form-check form-switch d-inline-block align-middle me-1" title="Travar campo"><input class="form-check-input lock-switch" type="checkbox" role="switch" tabindex="-1" data-lock-target="material"></div>Material:</label><input type="text" id="material" data-th-field="*{material}" class="form-control"/></div>
+                        <div class="col-md-3"><label for="modelo" class="form-label"><div class="form-check form-switch d-inline-block align-middle me-1" title="Travar campo"><input class="form-check-input lock-switch" type="checkbox" role="switch" tabindex="-1" data-lock-target="modelo"></div>Modelo:</label><input type="text" id="modelo" data-th-field="*{modelo}" class="form-control"/></div>
+                        <div class="col-md-3"><label for="tamanho" class="form-label"><div class="form-check form-switch d-inline-block align-middle me-1" title="Travar campo"><input class="form-check-input lock-switch" type="checkbox" role="switch" tabindex="-1" data-lock-target="tamanho"></div>Tamanho:</label><input type="text" id="tamanho" data-th-field="*{tamanho}" class="form-control"/></div>
+                        <div class="col-md-3"><label for="lote" class="form-label"><div class="form-check form-switch d-inline-block align-middle me-1" title="Travar campo"><input class="form-check-input lock-switch" type="checkbox" role="switch" tabindex="-1" data-lock-target="lote"></div>Lote:</label><input type="text" id="lote" data-th-field="*{lote}" class="form-control"/></div>
+                        <div class="col-md-3"><label for="fabricacao" class="form-label"><div class="form-check form-switch d-inline-block align-middle me-1" title="Travar campo"><input class="form-check-input lock-switch" type="checkbox" role="switch" tabindex="-1" data-lock-target="fabricacao"></div>Fabricação:</label><input type="date" id="fabricacao" data-th-field="*{fabricacao}" class="form-control"/></div>
+                        <div class="col-md-3"><label for="validade" class="form-label"><div class="form-check form-switch d-inline-block align-middle me-1" title="Travar campo"><input class="form-check-input lock-switch" type="checkbox" role="switch" tabindex="-1" data-lock-target="validade"></div>Validade:</label><input type="date" id="validade" data-th-field="*{validade}" class="form-control"/></div>
+                        <div class="col-md-3"><label for="referencia" class="form-label"><div class="form-check form-switch d-inline-block align-middle me-1" title="Travar campo"><input class="form-check-input lock-switch" type="checkbox" role="switch" tabindex="-1" data-lock-target="referencia"></div>Referência:</label><input type="text" id="referencia" data-th-field="*{referencia}" class="form-control"/></div>
+                        <div class="col-md-4"><label for="quantidade" class="form-label"><div class="form-check form-switch d-inline-block align-middle me-1" title="Travar campo"><input class="form-check-input lock-switch" type="checkbox" role="switch" tabindex="-1" data-lock-target="quantidade"></div>Quantidade:</label><input type="number" id="quantidade" data-th-field="*{quantidade}" class="form-control"/></div>
+                        <div class="col-md-8"><label for="formaAvaliacao" class="form-label"><div class="form-check form-switch d-inline-block align-middle me-1" title="Travar campo"><input class="form-check-input lock-switch" type="checkbox" role="switch" tabindex="-1" data-lock-target="formaAvaliacao"></div>Forma de Avaliação:</label><input type="text" id="formaAvaliacao" data-th-field="*{formaAvaliacao}" class="form-control"/></div>
+                        <div class="col-md-4"><label for="enviadoPara" class="form-label"><div class="form-check form-switch d-inline-block align-middle me-1" title="Travar campo"><input class="form-check-input lock-switch" type="checkbox" role="switch" tabindex="-1" data-lock-target="enviadoPara"></div>Enviado Para:</label><input type="text" id="enviadoPara" data-th-field="*{enviadoPara}" class="form-control"/></div>
+                        <div class="col-md-4"><label for="responsavel" class="form-label"><div class="form-check form-switch d-inline-block align-middle me-1" title="Travar campo"><input class="form-check-input lock-switch" type="checkbox" role="switch" tabindex="-1" data-lock-target="responsavel"></div>Responsável:</label><input type="text" id="responsavel" data-th-field="*{responsavel}" class="form-control"/></div>
+                        <div class="col-md-4"><label for="dataEnvio" class="form-label"><div class="form-check form-switch d-inline-block align-middle me-1" title="Travar campo"><input class="form-check-input lock-switch" type="checkbox" role="switch" tabindex="-1" data-lock-target="dataEnvio"></div>Data de Envio:</label><input type="date" id="dataEnvio" data-th-field="*{dataEnvio}" class="form-control"/></div>
+                    </div>
+                    <hr class="my-4">
+                    <button id="saveButton" type="submit" class="w-100 btn btn-primary btn-lg">Salvar Ficha</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Coluna da Direita com os Painéis -->
+    <div class="col-lg-3 d-flex flex-column">
+        <div class="card shadow-sm mb-3 flex-grow-1">
+            <div class="card-header d-flex justify-content-between align-items-center"><h4 class="my-1">Pregões</h4><button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalAdicionarPregao">Adicionar</button></div>
+            <div class="card-body d-flex flex-column">
+                <input type="search" id="searchPregao" class="form-control mb-3" placeholder="Pesquisar...">
+                <div id="pregao-list-container" class="list-group flex-grow-1" style="overflow-y: auto;">
+                    <a href="#" class="list-group-item list-group-item-action pregao-item" data-th-each="pregao : ${listaPregoes}" data-th-attr="data-nome=${pregao.nome}, data-processo=${pregao.processo}, data-descricao=${pregao.descricao}" onclick="preencherFormularioPregao(this.getAttribute('data-nome'), this.getAttribute('data-processo'), this.getAttribute('data-descricao')); return false;">
+                        <h6 class="mb-1" data-th-text="${pregao.nome}"></h6><p class="mb-1" data-th-text="${pregao.descricao}"></p><small class="text-muted" data-th-text="'Processo: ' + ${pregao.processo}"></small>
+                    </a>
+                </div>
+                <p data-th-if="${listaPregoes.isEmpty()}" id="no-pregao-message" class="text-muted mt-2">Nenhum pregão cadastrado.</p>
+                <p id="no-results-message-pregao" class="text-muted mt-2" style="display: none;">Nenhum resultado encontrado.</p>
+            </div>
+        </div>
+        
+        <div class="card shadow-sm mb-5 flex-grow-1">
+            <div class="card-header d-flex justify-content-between align-items-center"><h4 class="my-1">Empresas</h4><button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#modalAdicionarEmpresa">Adicionar</button></div>
+            <div class="card-body d-flex flex-column">
+                <input type="search" id="searchEmpresa" class="form-control mb-3" placeholder="Pesquisar...">
+                <div id="empresa-list-container" class="list-group flex-grow-1" style="overflow-y: auto;">
+                    <a href="#" class="list-group-item list-group-item-action pregao-item" data-th-each="empresa : ${listaEmpresas}" data-th-attr="data-nome=${empresa.nome}" onclick="preencherLicitante(this.getAttribute('data-nome')); return false;">
+                        <h6 class="mb-1" data-th-text="${empresa.nome}"></h6>
+                        <small class="text-muted" data-th-text="${empresa.cnpj != null ? 'CNPJ: ' + empresa.cnpj : 'CNPJ não informado'}"></small>
+                    </a>
+                </div>
+                <p data-th-if="${listaEmpresas.isEmpty()}" id="no-empresa-message" class="text-muted mt-2">Nenhuma empresa cadastrada.</p>
+                <p id="no-results-message-empresa" class="text-muted mt-2" style="display: none;">Nenhum resultado encontrado.</p>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Scripts -->
+<script>
+    // Função para verificar se o grupo de pregão está travado
+    function isPregaoGroupLocked() {
+        const groupSwitch = document.getElementById('lockPregaoGroup');
+        return groupSwitch && groupSwitch.checked;
+    }
+
+    // Função para preencher os campos vinculados de Pregão, respeitando a trava
+    function preencherFormularioPregao(numero, processo, descricao) {
+        if (!isPregaoGroupLocked()) {
+            document.getElementById('pregao').value = numero || '';
+            document.getElementById('processo').value = processo || '';
+            document.getElementById('nomePregao').value = descricao || '';
+        }
+    }
+
+    // Função para preencher o campo Licitante, respeitando a trava
+    function preencherLicitante(nome) {
+        if (!isLocked('licitante')) {
+            document.getElementById('licitante').value = nome || '';
+        }
+    }
+    
+    // Função para verificar se um switch individual está travado
+    function isLocked(elementId) {
+        if (!elementId) return false;
+        const switchEl = document.querySelector(`.lock-switch[data-lock-target="${elementId}"]`);
+        return switchEl && switchEl.checked;
+    }
+
+    const form = document.getElementById('fichaForm');
+
+    // Lógica para salvar os campos travados antes de enviar o formulário
+    form.addEventListener('submit', function() {
+        const lockedFields = {};
+        if (isPregaoGroupLocked()) {
+            lockedFields.lockPregaoGroup = true;
+            lockedFields.pregao = document.getElementById('pregao').value;
+            lockedFields.nomePregao = document.getElementById('nomePregao').value;
+            lockedFields.processo = document.getElementById('processo').value;
+        }
+        document.querySelectorAll('.lock-switch:checked').forEach(switchEl => {
+            const targetId = switchEl.dataset.lockTarget;
+            const element = document.getElementById(targetId);
+            if (element) { lockedFields[targetId] = element.value; }
+        });
+        sessionStorage.setItem('lockedFields', JSON.stringify(lockedFields));
+    });
+
+    // Lógica para restaurar os campos travados ao carregar a página
+    document.addEventListener('DOMContentLoaded', function () {
+        const lockedFieldsJSON = sessionStorage.getItem('lockedFields');
+        if (lockedFieldsJSON) {
+            const lockedFields = JSON.parse(lockedFieldsJSON);
+            if (lockedFields.lockPregaoGroup) {
+                document.getElementById('lockPregaoGroup').checked = true;
+                document.getElementById('pregao').value = lockedFields.pregao || '';
+                document.getElementById('nomePregao').value = lockedFields.nomePregao || '';
+                document.getElementById('processo').value = lockedFields.processo || '';
+            }
+            document.querySelectorAll('.lock-switch').forEach(switchEl => {
+                const targetId = switchEl.dataset.lockTarget;
+                if (lockedFields[targetId]) {
+                    document.getElementById(targetId).value = lockedFields[targetId];
+                    switchEl.checked = true;
+                }
+            });
+        }
+    });
+
+    // Lógica de navegação com Tab/Enter
+    document.addEventListener('keydown', function(event) {
+        if (event.key !== 'Enter' && event.key !== 'Tab') { return; }
+        const activeElement = document.activeElement;
+        if (activeElement.id === 'saveButton' || activeElement.tagName.toLowerCase() === 'textarea') { return; }
+        
+        // Impede que o Enter envie o formulário
+        if (event.key === 'Enter') {
+             event.preventDefault();
+        }
+
+        const focusableElements = Array.from(form.querySelectorAll('input:not([readonly]):not(.lock-switch), select, textarea, button'));
+        const currentIndex = focusableElements.indexOf(activeElement);
+
+        // Se o Tab for pressionado no último campo, deixa o navegador seguir o fluxo normal
+        if (event.key === 'Tab' && !event.shiftKey && currentIndex === focusableElements.length - 1) {
+            return;
+        }
+        
+        event.preventDefault(); // Impede o Tab apenas se não for o último campo
+
+        let nextIndex = currentIndex;
+        const direction = event.shiftKey ? -1 : 1;
+        do {
+            nextIndex = (nextIndex + direction + focusableElements.length) % focusableElements.length;
+            if (nextIndex === currentIndex) { break; }
+        } while (isLocked(focusableElements[nextIndex].id));
+        
+        const nextElement = focusableElements[nextIndex];
+        if (nextElement) { nextElement.focus(); }
+    });
+    
+    // Lógica da pesquisa em tempo real para Pregões
+    document.getElementById('searchPregao').addEventListener('input', function(event) {
+        const searchTerm = event.target.value.toLowerCase();
+        const items = document.querySelectorAll('#pregao-list-container .pregao-item');
+        const noResultsMessage = document.getElementById('no-results-message-pregao');
+        const noPregaoMessage = document.getElementById('no-pregao-message');
+        let visibleCount = 0;
+        items.forEach(item => {
+            const nome = item.getAttribute('data-nome').toLowerCase();
+            const processo = item.getAttribute('data-processo').toLowerCase();
+            const descricao = item.getAttribute('data-descricao').toLowerCase();
+            if (nome.includes(searchTerm) || processo.includes(searchTerm) || descricao.includes(searchTerm)) {
+                item.style.display = '';
+                visibleCount++;
+            } else {
+                item.style.display = 'none';
+            }
+        });
+        if (noResultsMessage) { noResultsMessage.style.display = (visibleCount === 0 && searchTerm !== '') ? 'block' : 'none'; }
+        if (noPregaoMessage) { noPregaoMessage.style.display = (items.length === 0) ? 'block' : 'none'; }
+    });
+
+    // Lógica da pesquisa em tempo real para Empresas
+    document.getElementById('searchEmpresa').addEventListener('input', function(event) {
+        const searchTerm = event.target.value.toLowerCase();
+        const items = document.querySelectorAll('#empresa-list-container .pregao-item');
+        const noResultsMessage = document.getElementById('no-results-message-empresa');
+        const noEmpresaMessage = document.getElementById('no-empresa-message');
+        let visibleCount = 0;
+        items.forEach(item => {
+            const itemText = item.textContent.toLowerCase();
+            if (itemText.includes(searchTerm)) {
+                item.style.display = '';
+                visibleCount++;
+            } else {
+                item.style.display = 'none';
+            }
+        });
+        if (noResultsMessage) { noResultsMessage.style.display = (visibleCount === 0 && searchTerm !== '') ? 'block' : 'none'; }
+        if (noEmpresaMessage) { noEmpresaMessage.style.display = (items.length === 0) ? 'block' : 'none'; }
+    });
+</script>
+ 
+
+</body>
+</html>
