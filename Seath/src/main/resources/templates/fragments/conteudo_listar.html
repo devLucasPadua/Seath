@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <div data-th-fragment="conteudoListar">
+    <div class="card shadow-sm">
+        <div class="card-header"><h4 class="my-1">Fichas Cadastradas</h4></div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover mb-0">
+                    <thead class="table-dark">
+                    <tr><th>ID</th><th>Pregão</th><th>Processo</th><th>Item</th><th>Licitante</th><th>Produto</th><th>Marca</th><th>Qtd.</th><th>Responsável</th><th>Data Envio</th><th>Ações</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr data-th-each="ficha : ${listaFichas}">
+                            <td data-th-text="${ficha.id}"></td>
+                            <td data-th-text="${ficha.pregao}"></td>
+                            <td data-th-text="${ficha.processo}"></td>
+                            <td data-th-text="${ficha.item}"></td>
+                            <td data-th-text="${ficha.licitante}"></td>
+                            <td data-th-text="${ficha.infoProduto}"></td>
+                            <td data-th-text="${ficha.marca}"></td>
+                            <td data-th-text="${ficha.quantidade}"></td>
+                            <td data-th-text="${ficha.responsavel}"></td>
+                            <td data-th-text="${#temporals.format(ficha.dataEnvio, 'dd/MM/yyyy')}"></td>
+                            <td class="actions">
+                                <a class="btn btn-sm btn-success" data-th-href="@{/fichas/exportar/{id}(id=${ficha.id})}" title="Exportar para DOCX"><i class="bi bi-file-earmark-arrow-down"></i></a>
+                                <a class="btn btn-sm btn-primary" data-th-href="@{/fichas/editar/{id}(id=${ficha.id})}" title="Editar Ficha"><i class="bi bi-pencil-square"></i></a>
+                            </td>
+                        </tr>
+                        <tr data-th-if="${listaFichas.isEmpty()}"><td colspan="11" class="text-center text-muted">Nenhuma ficha cadastrada.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+    </body>
+</html>

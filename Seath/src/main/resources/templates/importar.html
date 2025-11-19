@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>SEATH - Importar Histórico</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body class="bg-light">
+
+<div class="container mt-5">
+    <header class="text-center mb-4">
+        <h1>SEATH</h1>
+        <p class="lead">Importação de Histórico de Fichas</p>
+    </header>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Área de Alertas -->
+            <div th:if="${success}" class="alert alert-success" role="alert" th:text="${success}"></div>
+            <div th:if="${error}" class="alert alert-danger" role="alert" th:text="${error}"></div>
+
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white"><h4 class="my-1">Enviar Planilha</h4></div>
+                <div class="card-body">
+                    <p class="card-text">Selecione uma planilha Excel (.xlsx) para importar. O sistema irá procurar por uma aba chamada "Amostras" e ler os dados a partir da segunda linha.</p>
+                    <form method="POST" action="/importar" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="file" class="form-label">Arquivo da Planilha:</label>
+                            <input class="form-control" type="file" id="file" name="file" accept=".xlsx" required>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a href="/" class="btn btn-secondary">Voltar ao Início</a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-upload"></i> Enviar e Processar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
