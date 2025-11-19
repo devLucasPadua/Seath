@@ -12,15 +12,13 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity; // <-- Importante para SPA
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import java.io.OutputStream;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class FichaController {
@@ -41,41 +39,45 @@ public class FichaController {
         return "index";
     }
 
-    // --- NOVOS ENDPOINTS DE BUSCA PARA O HTMX ---
+    // --- ENDPOINTS DE BUSCA (HTMX) ---
 
     @GetMapping("/pregoes/buscar")
     public String buscarPregoes(@RequestParam("termoBusca") String termo, Model model) {
-        if (termo.isEmpty()) {
+        if (termo == null || termo.isEmpty()) {
             model.addAttribute("listaPregoes", pregaoRepository.findTop3ByOrderByIdDesc());
         } else {
             model.addAttribute("listaPregoes", pregaoRepository.findByNomeContainingIgnoreCaseOrProcessoContainingIgnoreCaseOrDescricaoContainingIgnoreCase(termo, termo, termo));
         }
-        // Retorna apenas o fragmento da lista
-        return "index :: #pregao-list-container";
+        // Retorna apenas o fragmento da lista dentro do painel lateral
+        return "fragments/conteudo_cadastro :: #pregao-list-container";
     }
 
     @GetMapping("/empresas/buscar")
     public String buscarEmpresas(@RequestParam("termoBusca") String termo, Model model) {
-        if (termo.isEmpty()) {
+        if (termo == null || termo.isEmpty()) {
             model.addAttribute("listaEmpresas", empresaRepository.findTop3ByOrderByIdDesc());
         } else {
             model.addAttribute("listaEmpresas", empresaRepository.findByNomeContainingIgnoreCaseOrCnpjContainingIgnoreCase(termo, termo));
         }
-        // Retorna apenas o fragmento da lista
-        return "index :: #empresa-list-container";
+        // Retorna apenas o fragmento da lista dentro do painel lateral
+        return "fragments/conteudo_cadastro :: #empresa-list-container";
     }    
     
-    // ### NOVO MÉTODO PARA A PÁGINA DE LISTAGEM ###
     @GetMapping("/fichas")
     public String listarFichas(Model model) {
         model.addAttribute("listaFichas", fichaService.buscarTodas());
-        return "listar_fichas"; // Aponta para o arquivo listar_fichas.html
+        return "fragments/conteudo_listar :: conteudoListar"; 
     }
 
     // --- AÇÕES DA FICHA ---
     @PostMapping("/fichas/salvar")
     public String salvarFicha(@ModelAttribute("fichaForm") Ficha ficha, RedirectAttributes redirectAttributes) {
-        if (ficha.isEmpty()) { redirectAttributes.addFlashAttribute("error", "Não é possível salvar uma ficha vazia."); return "redirect:/"; }
+        // Validação básica
+        if (ficha.getPregao() == null && ficha.getItem() == null) { 
+             redirectAttributes.addFlashAttribute("error", "A ficha parece estar vazia."); 
+             return "redirect:/"; 
+        }
+        
         fichaService.salvar(ficha);
         redirectAttributes.addFlashAttribute("success", "Ficha salva com sucesso!");
         return "redirect:/";
@@ -96,7 +98,7 @@ public class FichaController {
     public String atualizarFicha(@ModelAttribute("ficha") Ficha ficha, RedirectAttributes redirectAttributes) {
         fichaService.salvar(ficha);
         redirectAttributes.addFlashAttribute("success", "Ficha atualizada com sucesso!");
-        return "redirect:/fichas"; // Redireciona para a lista após editar
+        return "redirect:/fichas"; 
     }
 
     @GetMapping("/fichas/exportar/{id}")
@@ -104,12 +106,15 @@ public class FichaController {
         try {
             Ficha ficha = fichaService.buscarPorId(id);
             byte[] docxBytes = fichaService.gerarDocxFicha(id);
-            String processo = ficha.getProcesso() != null ? ficha.getProcesso().replaceAll("[^a-zA-Z0-9.-]", "_") : "proc";
-            String item = ficha.getItem() != null ? ficha.getItem().replaceAll("[^a-zA-Z0-9.-]", "_") : "item";
-            String nomeArquivo = "Ficha_Proc_" + processo + "_Item_" + item + ".docx";
+            
+            String processoSafe = (ficha.getProcesso() != null) ? ficha.getProcesso().replaceAll("[^a-zA-Z0-9.-]", "_") : "proc";
+            String itemSafe = (ficha.getItem() != null) ? ficha.getItem().replaceAll("[^a-zA-Z0-9.-]", "_") : "item";
+            String nomeArquivo = "Ficha_" + processoSafe + "_Item_" + itemSafe + ".docx";
+            
             response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
             response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + nomeArquivo + "\"");
             response.setContentLength(docxBytes.length);
+            
             try (OutputStream outStream = response.getOutputStream()) {
                 outStream.write(docxBytes);
                 outStream.flush();
@@ -120,16 +125,27 @@ public class FichaController {
         }
     }
 
-    // --- AÇÕES DO PREGÃO E EMPRESA ---
+    // --- AÇÕES DO PREGÃO E EMPRESA (CORRIGIDO PARA SPA) ---
+    
     @PostMapping("/pregoes/salvar")
-    public String salvarPregao(@ModelAttribute("pregaoForm") Pregao pregao, RedirectAttributes redirectAttributes) {
-        // ... (código de salvar pregão)
-        return "redirect:/";
+    @ResponseBody // Retorna JSON/Status code, não HTML, impedindo o reload da página
+    public ResponseEntity<?> salvarPregao(@ModelAttribute Pregao pregao) {
+        try {
+            pregaoService.salvar(pregao);
+            return ResponseEntity.ok().build(); // Retorna 200 OK
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Erro ao salvar pregão.");
+        }
     }
 
     @PostMapping("/empresas/salvar")
-    public String salvarEmpresa(@ModelAttribute("empresaForm") Empresa empresa, RedirectAttributes redirectAttributes) {
-        // ... (código de salvar empresa)
-        return "redirect:/";
+    @ResponseBody // Retorna JSON/Status code, não HTML, impedindo o reload da página
+    public ResponseEntity<?> salvarEmpresa(@ModelAttribute Empresa empresa) {
+        try {
+            empresaService.salvar(empresa);
+            return ResponseEntity.ok().build(); // Retorna 200 OK
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Erro ao salvar empresa.");
+        }
     }
 }

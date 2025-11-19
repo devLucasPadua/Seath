@@ -1,0 +1,27 @@
+/* src/main/resources/static/css/custom.css */
+
+/* Cursor de mãozinha para os switches e checkboxes de travar */
+.lock-checkbox, .lock-switch, .form-check-input {
+    cursor: pointer;
+}
+
+/* Ajuste para modal não ficar transparente no HTMX */
+.modal-backdrop {
+    opacity: 0.5 !important; 
+}
+
+/* Indica que o ícone/label da trava possui uma dica (tooltip) */
+.input-group-text { 
+    background-color: #f8f9fa;
+    cursor: help; 
+}
+
+/* Destaque suave para o checkbox de baixar relatorio */
+.checkbox-highlight {
+    background-color: #e9ecef;
+    border: 1px solid #ced4da;
+    transition: background-color 0.2s;
+}
+.checkbox-highlight:hover {
+    background-color: #dee2e6;
+}
