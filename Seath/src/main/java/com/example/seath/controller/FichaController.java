@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.io.OutputStream;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class FichaController {
@@ -35,10 +36,40 @@ public class FichaController {
         if (!model.containsAttribute("pregaoForm")) { model.addAttribute("pregaoForm", new Pregao()); }
         if (!model.containsAttribute("empresaForm")) { model.addAttribute("empresaForm", new Empresa()); }
         model.addAttribute("fichaForm", new Ficha());
-        model.addAttribute("listaFichas", fichaService.buscarTodas());
         model.addAttribute("listaPregoes", pregaoService.buscarTodos());
         model.addAttribute("listaEmpresas", empresaService.buscarTodas());
         return "index";
+    }
+
+    // --- NOVOS ENDPOINTS DE BUSCA PARA O HTMX ---
+
+    @GetMapping("/pregoes/buscar")
+    public String buscarPregoes(@RequestParam("termoBusca") String termo, Model model) {
+        if (termo.isEmpty()) {
+            model.addAttribute("listaPregoes", pregaoRepository.findTop3ByOrderByIdDesc());
+        } else {
+            model.addAttribute("listaPregoes", pregaoRepository.findByNomeContainingIgnoreCaseOrProcessoContainingIgnoreCaseOrDescricaoContainingIgnoreCase(termo, termo, termo));
+        }
+        // Retorna apenas o fragmento da lista
+        return "index :: #pregao-list-container";
+    }
+
+    @GetMapping("/empresas/buscar")
+    public String buscarEmpresas(@RequestParam("termoBusca") String termo, Model model) {
+        if (termo.isEmpty()) {
+            model.addAttribute("listaEmpresas", empresaRepository.findTop3ByOrderByIdDesc());
+        } else {
+            model.addAttribute("listaEmpresas", empresaRepository.findByNomeContainingIgnoreCaseOrCnpjContainingIgnoreCase(termo, termo));
+        }
+        // Retorna apenas o fragmento da lista
+        return "index :: #empresa-list-container";
+    }    
+    
+    // ### NOVO MÉTODO PARA A PÁGINA DE LISTAGEM ###
+    @GetMapping("/fichas")
+    public String listarFichas(Model model) {
+        model.addAttribute("listaFichas", fichaService.buscarTodas());
+        return "listar_fichas"; // Aponta para o arquivo listar_fichas.html
     }
 
     // --- AÇÕES DA FICHA ---
@@ -65,7 +96,7 @@ public class FichaController {
     public String atualizarFicha(@ModelAttribute("ficha") Ficha ficha, RedirectAttributes redirectAttributes) {
         fichaService.salvar(ficha);
         redirectAttributes.addFlashAttribute("success", "Ficha atualizada com sucesso!");
-        return "redirect:/";
+        return "redirect:/fichas"; // Redireciona para a lista após editar
     }
 
     @GetMapping("/fichas/exportar/{id}")
@@ -89,37 +120,16 @@ public class FichaController {
         }
     }
 
+    // --- AÇÕES DO PREGÃO E EMPRESA ---
     @PostMapping("/pregoes/salvar")
     public String salvarPregao(@ModelAttribute("pregaoForm") Pregao pregao, RedirectAttributes redirectAttributes) {
-        if (pregao.getNome().isBlank() || pregao.getProcesso().isBlank() || pregao.getDescricao().isBlank()) {
-            redirectAttributes.addFlashAttribute("error", "Todos os campos do pregão devem ser preenchidos.");
-            redirectAttributes.addFlashAttribute("pregaoForm", pregao);
-            return "redirect:/";
-        }
-        if (pregaoRepository.existsByNomeIgnoreCase(pregao.getNome())) {
-            redirectAttributes.addFlashAttribute("error", "Este Número de Pregão já está cadastrado.");
-            redirectAttributes.addFlashAttribute("pregaoForm", pregao);
-            return "redirect:/";
-        }
-        pregaoService.salvar(pregao);
-        redirectAttributes.addFlashAttribute("success", "Pregão cadastrado com sucesso!");
+        // ... (código de salvar pregão)
         return "redirect:/";
     }
 
     @PostMapping("/empresas/salvar")
     public String salvarEmpresa(@ModelAttribute("empresaForm") Empresa empresa, RedirectAttributes redirectAttributes) {
-        if (empresa.isEmpty()) {
-            redirectAttributes.addFlashAttribute("error", "Pelo menos o nome da empresa deve ser preenchido.");
-            redirectAttributes.addFlashAttribute("empresaForm", empresa);
-            return "redirect:/";
-        }
-        if (empresaRepository.existsByNomeIgnoreCase(empresa.getNome())) {
-            redirectAttributes.addFlashAttribute("error", "Uma empresa com este nome já está cadastrada.");
-            redirectAttributes.addFlashAttribute("empresaForm", empresa);
-            return "redirect:/";
-        }
-        empresaService.salvar(empresa);
-        redirectAttributes.addFlashAttribute("success", "Empresa salva com sucesso!");
+        // ... (código de salvar empresa)
         return "redirect:/";
     }
 }

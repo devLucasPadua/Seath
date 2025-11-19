@@ -10,5 +10,6 @@ public interface PregaoRepository extends JpaRepository<Pregao, Long> {
     boolean existsByNomeIgnoreCase(String nome);
     boolean existsByProcessoIgnoreCase(String processo);
     boolean existsByDescricaoIgnoreCase(String descricao);
+    List<Pregao> findTop3ByOrderByIdDesc();
     List<Pregao> findByNomeContainingIgnoreCaseOrProcessoContainingIgnoreCaseOrDescricaoContainingIgnoreCase(String nome, String processo, String descricao);
 }

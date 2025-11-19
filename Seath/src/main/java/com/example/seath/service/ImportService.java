@@ -1,8 +1,6 @@
 package com.example.seath.service;
 
-import com.example.seath.model.Empresa;
 import com.example.seath.model.Ficha;
-import com.example.seath.model.Pregao;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -17,65 +15,54 @@ import java.util.Iterator;
 @Service
 public class ImportService {
 
-    @Autowired private FichaService fichaService;
-    @Autowired private PregaoService pregaoService;
-    @Autowired private EmpresaService empresaService;
+    @Autowired 
+    private FichaService fichaService;
 
+    // Método atualizado para receber os novos parâmetros
     @Transactional
-    public void importarPlanilha(InputStream inputStream) throws Exception {
+    public void importarPlanilha(InputStream inputStream, String nomePregao, String numeroPregao) throws Exception {
         Workbook workbook = new XSSFWorkbook(inputStream);
-        Sheet sheet = workbook.getSheet("Amostras"); // Busca a aba específica
+        Sheet sheet = workbook.getSheet("Amostras");
 
         if (sheet == null) {
+            workbook.close();
             throw new Exception("Aba 'Amostras' não encontrada na planilha.");
         }
 
         Iterator<Row> rows = sheet.iterator();
         
-        // Pula a primeira linha (cabeçalho)
         if (rows.hasNext()) {
-            rows.next();
+            rows.next(); // Pula cabeçalho
         }
 
         while (rows.hasNext()) {
             Row currentRow = rows.next();
             
-            // Supondo a ordem das colunas. Ajuste os números se necessário.
-            // Ex: getCell(0) para a primeira coluna (A), getCell(1) para a segunda (B), etc.
-            String numPregao = getCellValue(currentRow.getCell(0));
-            String numProcesso = getCellValue(currentRow.getCell(1));
-            String descPregao = getCellValue(currentRow.getCell(2)); // Supondo que a descrição do pregão esteja na coluna C
+            String item = getCellValue(currentRow.getCell(0));
+            String infoProduto = getCellValue(currentRow.getCell(1));
+            String licitante = getCellValue(currentRow.getCell(2));
             String marca = getCellValue(currentRow.getCell(3));
-            String descProduto = getCellValue(currentRow.getCell(4));
-            String licitante = getCellValue(currentRow.getCell(5));
-            String status = getCellValue(currentRow.getCell(6)); // APROVADO ou REPROVADO
+            String enviadoPara = getCellValue(currentRow.getCell(5));
+            String responsavel = getCellValue(currentRow.getCell(6));
 
-            // Validação simples: ignora a linha se campos essenciais estiverem vazios
-            if (numPregao.isEmpty() || marca.isEmpty() || descProduto.isEmpty() || licitante.isEmpty()) {
+            if (infoProduto.isEmpty() || marca.isEmpty() || licitante.isEmpty()) {
                 continue;
             }
 
-            // Lógica para encontrar ou criar as entidades (simplificada por enquanto)
-            // Futuramente, isso usará o "findOrCreate"
-            Pregao pregao = new Pregao();
-            pregao.setNome(numPregao);
-            pregao.setProcesso(numProcesso);
-            pregao.setDescricao(descPregao);
-            // pregaoService.salvar(pregao); // Desativado para evitar duplicatas por enquanto
-
-            Empresa empresa = new Empresa();
-            empresa.setNome(licitante);
-            // empresaService.salvar(empresa); // Desativado para evitar duplicatas
-
-            // Cria a Ficha de histórico
             Ficha ficha = new Ficha();
-            ficha.setPregao(numPregao);
-            ficha.setProcesso(numProcesso);
-            ficha.setNomePregao(descPregao);
-            ficha.setMarca(marca);
-            ficha.setInfoProduto(descProduto);
+            
+            // ### DADOS DO NOME DO ARQUIVO APLICADOS AQUI ###
+            ficha.setNomePregao(nomePregao);
+            ficha.setPregao(numeroPregao);
+            // O campo "processo" não foi extraído do nome do arquivo, então ficará nulo por enquanto.
+
+            // Dados da planilha
+            ficha.setItem(item);
+            ficha.setInfoProduto(infoProduto);
             ficha.setLicitante(licitante);
-            // ficha.setStatusAnalise(status); // Futuramente, adicionaremos este campo à Ficha
+            ficha.setMarca(marca);
+            ficha.setEnviadoPara(enviadoPara);
+            ficha.setResponsavel(responsavel);
             
             fichaService.salvar(ficha);
         }
@@ -89,11 +76,13 @@ public class ImportService {
         }
         switch (cell.getCellType()) {
             case STRING:
-                return cell.getStringCellValue();
+                return cell.getStringCellValue().trim();
             case NUMERIC:
-                return String.valueOf(cell.getNumericCellValue());
-            case BOOLEAN:
-                return String.valueOf(cell.getBooleanCellValue());
+                if (cell.getNumericCellValue() == (long) cell.getNumericCellValue()) {
+                    return String.format("%d", (long) cell.getNumericCellValue());
+                } else {
+                    return String.valueOf(cell.getNumericCellValue());
+                }
             default:
                 return "";
         }

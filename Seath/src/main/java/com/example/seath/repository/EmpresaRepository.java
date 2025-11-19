@@ -11,5 +11,7 @@ public interface EmpresaRepository extends JpaRepository<Empresa, Long> {
     boolean existsByNomeIgnoreCase(String nome);
     boolean existsByCnpjIgnoreCase(String cnpj);
     
+    List<Empresa> findTop3ByOrderByIdDesc();
+    
     List<Empresa> findByNomeContainingIgnoreCaseOrCnpjContainingIgnoreCase(String nome, String cnpj);
 }

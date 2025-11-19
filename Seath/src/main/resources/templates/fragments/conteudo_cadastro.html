@@ -47,15 +47,25 @@
         <div class="card shadow-sm mb-3 flex-grow-1">
             <div class="card-header d-flex justify-content-between align-items-center"><h4 class="my-1">Pregões</h4><button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalAdicionarPregao">Adicionar</button></div>
             <div class="card-body d-flex flex-column">
-                <input type="search" id="searchPregao" class="form-control mb-3" placeholder="Pesquisar..." data-hx-get="/view/pregoes/lista" data-hx-trigger="keyup changed delay:500ms" data-hx-target="#pregao-list-container" name="termoBusca">
-                <div id="pregao-list-container" class="list-group flex-grow-1" style="overflow-y: auto;" data-hx-get="/view/pregoes/lista" data-hx-trigger="load, loadList from body" data-hx-swap="innerHTML"></div>
+                <input type="search" id="searchPregao" class="form-control mb-3" placeholder="Pesquisar...">
+                <div id="pregao-list-container" class="list-group flex-grow-1" style="overflow-y: auto;">
+                    <a href="#" class="list-group-item list-group-item-action side-panel-item" data-th-each="pregao : ${listaPregoes}" data-th-attr="data-nome=${pregao.nome}, data-processo=${pregao.processo}, data-descricao=${pregao.descricao}" onclick="preencherFormularioPregao(this.getAttribute('data-nome'), this.getAttribute('data-processo'), this.getAttribute('data-descricao')); return false;">
+                        <h6 class="mb-1" data-th-text="${pregao.nome}"></h6><p class="mb-1" data-th-text="${pregao.descricao}"></p><small class="text-muted" data-th-text="'Processo: ' + ${pregao.processo}"></small>
+                    </a>
+                </div>
+                <p data-th-if="${listaPregoes.isEmpty()}" class="text-muted mt-2">Nenhum pregão cadastrado.</p>
             </div>
         </div>
         <div class="card shadow-sm mb-5 flex-grow-1">
             <div class="card-header d-flex justify-content-between align-items-center"><h4 class="my-1">Empresas</h4><button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#modalAdicionarEmpresa">Adicionar</button></div>
             <div class="card-body d-flex flex-column">
-                <input type="search" id="searchEmpresa" class="form-control mb-3" placeholder="Pesquisar..." data-hx-get="/view/empresas/lista" data-hx-trigger="keyup changed delay:500ms" data-hx-target="#empresa-list-container" name="termoBusca">
-                <div id="empresa-list-container" class="list-group flex-grow-1" style="overflow-y: auto;" data-hx-get="/view/empresas/lista" data-hx-trigger="load, loadList from body" data-hx-swap="innerHTML"></div>
+                <input type="search" id="searchEmpresa" class="form-control mb-3" placeholder="Pesquisar...">
+                <div id="empresa-list-container" class="list-group flex-grow-1" style="overflow-y: auto;">
+                    <a href="#" class="list-group-item list-group-item-action side-panel-item" data-th-each="empresa : ${listaEmpresas}" data-th-attr="data-nome=${empresa.nome}" onclick="preencherLicitante(this.getAttribute('data-nome')); return false;">
+                        <h6 class="mb-1" data-th-text="${empresa.nome}"></h6><small class="text-muted" data-th-text="${empresa.cnpj != null ? 'CNPJ: ' + empresa.cnpj : 'CNPJ não informado'}"></small>
+                    </a>
+                </div>
+                <p data-th-if="${listaEmpresas.isEmpty()}" class="text-muted mt-2">Nenhuma empresa cadastrada.</p>
             </div>
         </div>
     </div>
@@ -65,12 +75,12 @@
 <div class="modal fade" id="modalAdicionarPregao" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form data-hx-post="/api/pregoes/salvar" data-hx-target="#global-alert-container" data-hx-swap="innerHTML" data-hx-on-htmx-after-request="if(event.detail.successful) { this.reset(); bootstrap.Modal.getInstance(this.closest('.modal')).hide(); htmx.trigger('body', 'loadList'); }">
+            <form data-th-action="@{/pregoes/salvar}" method="post">
                 <div class="modal-header"><h5 class="modal-title">Adicionar Novo Pregão</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
                 <div class="modal-body">
-                    <div class="mb-3"><label class="form-label">Número do Pregão:</label><input type="text" class="form-control" name="nome" required pattern="[0-9\/\.\-\*]+" title="Apenas números e símbolos." autocomplete="off"></div>
+                    <div class="mb-3"><label class="form-label">Número do Pregão:</label><input type="text" class="form-control" name="nome" required pattern="[0-9\/\.\-\*]+" autocomplete="off"></div>
                     <div class="mb-3"><label class="form-label">Nome/Descrição do Pregão:</label><input type="text" class="form-control" name="descricao" required autocomplete="off"></div>
-                    <div class="mb-3"><label class="form-label">Número do Processo:</label><input type="text" class="form-control" name="processo" required pattern="[0-9\/\.\-\*]+" title="Apenas números e símbolos." autocomplete="off"></div>
+                    <div class="mb-3"><label class="form-label">Número do Processo:</label><input type="text" class="form-control" name="processo" required pattern="[0-9\/\.\-\*]+" autocomplete="off"></div>
                 </div>
                 <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button><button type="submit" class="btn btn-primary">Salvar</button></div>
             </form>
@@ -80,10 +90,7 @@
 <div class="modal fade" id="modalAdicionarEmpresa" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
-<div class="modal fade" id="modalAdicionarEmpresa" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form data-hx-post="/api/empresas/salvar" data-hx-target="#global-alert-container" data-hx-swap="innerHTML" data-hx-on-htmx-after-request="if(event.detail.successful) { this.reset(); bootstrap.Modal.getInstance(this.closest('.modal')).hide(); htmx.trigger('body', 'loadList'); }">
+            <form data-th-action="@{/empresas/salvar}" method="post">
                 <div class="modal-header"><h5 class="modal-title">Adicionar Nova Empresa</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
                 <div class="modal-body">
                     <div class="mb-3"><label class="form-label">Nome da Empresa:</label><input type="text" class="form-control" name="nome" required autocomplete="off"></div>
