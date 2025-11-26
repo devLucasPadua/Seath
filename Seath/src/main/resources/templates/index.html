@@ -1,150 +1,196 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>SEATH - Sistema de Análise</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="/css/custom.css"> 
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-        .form-label .form-switch { margin-bottom: -0.3rem; }
-        .actions a:not(:last-child) { margin-right: 0.5rem; }
-        .side-panel-item { cursor: pointer; }
-    </style>
-</head>
-<body class="bg-light">
+    <head>
+        <meta charset="UTF-8">
+        <title>SEATH - Sistema de Análise</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+        <link rel="stylesheet" href="/css/custom.css"> 
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            .form-label .form-switch {
+                margin-bottom: -0.3rem;
+            }
+            .actions a:not(:last-child) {
+                margin-right: 0.5rem;
+            }
+            .side-panel-item {
+                cursor: pointer;
+            }
+        </style>
+    </head>
+    <body class="bg-light">
 
-<div class="container-fluid mt-4">
-    <header class="text-center mb-4">
-        <h1>SEATH</h1>
-        <p class="lead">Sistema de Engenharia para Análise, Testagem e Hospedagem</p>
-    </header>
-    <div id="global-alert-container" class="row justify-content-center"><div class="col-lg-10"></div></div>
-    <div class="row align-items-stretch">
-        <div class="col-lg-2 d-flex">
-            <div class="card shadow-sm mb-5 w-100">
-                <div class="card-header"><h4 class="my-1">Menu</h4></div>
-                <div class="card-body">
-                    <div class="list-group">
-                        <a href="#" class="list-group-item list-group-item-action" data-hx-get="/view/cadastrar" data-hx-target="#main-content" data-hx-swap="innerHTML">Cadastrar Ficha</a>
-                        <a href="#" class="list-group-item list-group-item-action" data-hx-get="/view/listar" data-hx-target="#main-content" data-hx-swap="innerHTML">Listar Fichas</a>
+        <div class="container-fluid mt-4">
+            <header class="text-center mb-4">
+                <h1>SEATH</h1>
+                <p class="lead">Sistema de Engenharia para Análise, Testagem e Hospedagem</p>
+            </header>
+            <div id="global-alert-container" class="row justify-content-center"><div class="col-lg-10"></div></div>
+            <div class="row align-items-stretch">
+                <div class="col-lg-2 d-flex">
+                    <div class="card shadow-sm mb-5 w-100">
+                        <div class="card-header"><h4 class="my-1">Menu</h4></div>
+                        <div class="card-body">
+                            <div class="list-group">
+                                <a href="#" class="list-group-item list-group-item-action" data-hx-get="/view/cadastrar" data-hx-target="#main-content" data-hx-swap="innerHTML">Cadastrar Ficha</a>
+                                <a href="#" class="list-group-item list-group-item-action" data-hx-get="/view/listar" data-hx-target="#main-content" data-hx-swap="innerHTML">Listar Fichas</a>
+                                <a href="#" class="list-group-item list-group-item-action" 
+   data-hx-get="/view/empresas" 
+   data-hx-target="#main-content" 
+   data-hx-swap="innerHTML">
+   <i class="bi bi-buildings me-2"></i> Gerenciar Empresas
+</a>
+                                <a href="#" class="list-group-item list-group-item-action" data-hx-get="/view/scraper" data-hx-target="#main-content" data-hx-swap="innerHTML"><i class="bi bi-cloud-download me-2"></i> Gerenciar Pregão</a>
+<a href="#" class="list-group-item list-group-item-action" 
+   data-hx-get="/view/produtos" 
+   data-hx-target="#main-content" 
+   data-hx-swap="innerHTML">
+   <i class="bi bi-box-seam me-2"></i> Gerenciar Produtos
+</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-10 d-flex">
+                    <div id="main-content" class="w-100" data-hx-get="/view/cadastrar" data-hx-trigger="load" data-hx-swap="innerHTML">
+                        <div class="d-flex justify-content-center align-items-center h-100">
+                            <div class="spinner-border" role="status"><span class="visually-hidden">Carregando...</span></div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-lg-10 d-flex">
-            <div id="main-content" class="w-100" data-hx-get="/view/cadastrar" data-hx-trigger="load" data-hx-swap="innerHTML">
-                <div class="d-flex justify-content-center align-items-center h-100">
-                    <div class="spinner-border" role="status"><span class="visually-hidden">Carregando...</span></div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://unpkg.com/htmx.org@1.9.10"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://unpkg.com/htmx.org@1.9.10"></script>
 
-<script>
-    // Funções auxiliares globais
-    function isPregaoGroupLocked() { const groupSwitch = document.getElementById('lockPregaoGroup'); return groupSwitch && groupSwitch.checked; }
-    function preencherFormularioPregao(numero, processo, descricao) { if (!isPregaoGroupLocked()) { document.getElementById('pregao').value = numero || ''; document.getElementById('processo').value = processo || ''; document.getElementById('nomePregao').value = descricao || ''; } }
-    function preencherLicitante(nome) { if (!isLocked('licitante')) { document.getElementById('licitante').value = nome || ''; } }
-    function isLocked(elementId) { if (!elementId) return false; const switchEl = document.querySelector(`.lock-switch[data-lock-target="${elementId}"]`); return switchEl && switchEl.checked; }
-
-    // Função principal que inicializa os scripts para o fragmento de cadastro
-    function initCadastroScripts() {
-        const form = document.getElementById('fichaForm');
-        if (!form) return;
-
-        // Lógica de salvar/restaurar switches
-        form.addEventListener('submit', function() {
-            const lockedFields = {};
-            if (isPregaoGroupLocked()) {
-                lockedFields.lockPregaoGroup = true;
-                lockedFields.pregao = document.getElementById('pregao').value;
-                lockedFields.nomePregao = document.getElementById('nomePregao').value;
-                lockedFields.processo = document.getElementById('processo').value;
+        <script>
+            // Funções auxiliares globais
+            function isPregaoGroupLocked() {
+                const groupSwitch = document.getElementById('lockPregaoGroup');
+                return groupSwitch && groupSwitch.checked;
             }
-            document.querySelectorAll('.lock-switch:checked').forEach(switchEl => {
-                const targetId = switchEl.dataset.lockTarget;
-                const element = document.getElementById(targetId);
-                if (element) { lockedFields[targetId] = element.value; }
-            });
-            sessionStorage.setItem('lockedFields', JSON.stringify(lockedFields));
-        });
-
-        const lockedFieldsJSON = sessionStorage.getItem('lockedFields');
-        if (lockedFieldsJSON) {
-            const lockedFields = JSON.parse(lockedFieldsJSON);
-            if (lockedFields.lockPregaoGroup) {
-                document.getElementById('lockPregaoGroup').checked = true;
-                document.getElementById('pregao').value = lockedFields.pregao || '';
-                document.getElementById('nomePregao').value = lockedFields.nomePregao || '';
-                document.getElementById('processo').value = lockedFields.processo || '';
+            function preencherFormularioPregao(numero, processo, descricao) {
+                if (!isPregaoGroupLocked()) {
+                    document.getElementById('pregao').value = numero || '';
+                    document.getElementById('processo').value = processo || '';
+                    document.getElementById('nomePregao').value = descricao || '';
+                }
             }
-            document.querySelectorAll('.lock-switch').forEach(switchEl => {
-                const targetId = switchEl.dataset.lockTarget;
-                if (lockedFields[targetId]) {
-                    document.getElementById(targetId).value = lockedFields[targetId];
-                    switchEl.checked = true;
+            function preencherLicitante(nome) {
+                if (!isLocked('licitante')) {
+                    document.getElementById('licitante').value = nome || '';
+                }
+            }
+            function isLocked(elementId) {
+                if (!elementId)
+                    return false;
+                const switchEl = document.querySelector(`.lock-switch[data-lock-target="${elementId}"]`);
+                return switchEl && switchEl.checked;
+            }
+
+            // Função principal que inicializa os scripts para o fragmento de cadastro
+            function initCadastroScripts() {
+                const form = document.getElementById('fichaForm');
+                if (!form)
+                    return;
+
+                // Lógica de salvar/restaurar switches
+                form.addEventListener('submit', function () {
+                    const lockedFields = {};
+                    if (isPregaoGroupLocked()) {
+                        lockedFields.lockPregaoGroup = true;
+                        lockedFields.pregao = document.getElementById('pregao').value;
+                        lockedFields.nomePregao = document.getElementById('nomePregao').value;
+                        lockedFields.processo = document.getElementById('processo').value;
+                    }
+                    document.querySelectorAll('.lock-switch:checked').forEach(switchEl => {
+                        const targetId = switchEl.dataset.lockTarget;
+                        const element = document.getElementById(targetId);
+                        if (element) {
+                            lockedFields[targetId] = element.value;
+                        }
+                    });
+                    sessionStorage.setItem('lockedFields', JSON.stringify(lockedFields));
+                });
+
+                const lockedFieldsJSON = sessionStorage.getItem('lockedFields');
+                if (lockedFieldsJSON) {
+                    const lockedFields = JSON.parse(lockedFieldsJSON);
+                    if (lockedFields.lockPregaoGroup) {
+                        document.getElementById('lockPregaoGroup').checked = true;
+                        document.getElementById('pregao').value = lockedFields.pregao || '';
+                        document.getElementById('nomePregao').value = lockedFields.nomePregao || '';
+                        document.getElementById('processo').value = lockedFields.processo || '';
+                    }
+                    document.querySelectorAll('.lock-switch').forEach(switchEl => {
+                        const targetId = switchEl.dataset.lockTarget;
+                        if (lockedFields[targetId]) {
+                            document.getElementById(targetId).value = lockedFields[targetId];
+                            switchEl.checked = true;
+                        }
+                    });
+                }
+
+                // Lógica de navegação Tab/Enter
+                form.addEventListener('keydown', function (event) {
+                    if (event.key !== 'Enter' && event.key !== 'Tab') {
+                        return;
+                    }
+                    const activeElement = document.activeElement;
+                    if (activeElement.id === 'saveButton' || activeElement.tagName.toLowerCase() === 'textarea') {
+                        return;
+                    }
+                    event.preventDefault();
+                    const focusableElements = Array.from(form.querySelectorAll('input:not([readonly]):not(.lock-switch), select, textarea, button'));
+                    const currentIndex = focusableElements.indexOf(activeElement);
+                    let nextIndex = currentIndex;
+                    const direction = event.shiftKey ? -1 : 1;
+                    do {
+                        nextIndex = (nextIndex + direction + focusableElements.length) % focusableElements.length;
+                        if (nextIndex === currentIndex)
+                            break;
+                    } while (isLocked(focusableElements[nextIndex].id));
+                    const nextElement = focusableElements[nextIndex];
+                    if (nextElement)
+                        nextElement.focus();
+                });
+
+                // Lógica de pesquisa para Pregões
+                const searchPregao = document.getElementById('searchPregao');
+                if (searchPregao) {
+                    searchPregao.addEventListener('input', function (event) {
+                        const searchTerm = event.target.value.toLowerCase();
+                        const items = document.querySelectorAll('#pregao-list-container .side-panel-item');
+                        items.forEach(item => {
+                            item.style.display = item.textContent.toLowerCase().includes(searchTerm) ? '' : 'none';
+                        });
+                    });
+                }
+
+                // Lógica de pesquisa para Empresas
+                const searchEmpresa = document.getElementById('searchEmpresa');
+                if (searchEmpresa) {
+                    searchEmpresa.addEventListener('input', function (event) {
+                        const searchTerm = event.target.value.toLowerCase();
+                        const items = document.querySelectorAll('#empresa-list-container .side-panel-item');
+                        items.forEach(item => {
+                            item.style.display = item.textContent.toLowerCase().includes(searchTerm) ? '' : 'none';
+                        });
+                    });
+                }
+            }
+
+            // Evento principal do HTMX que orquestra a inicialização dos scripts
+            document.body.addEventListener('htmx:afterSwap', function (event) {
+                if (event.detail.target.id === 'main-content') {
+                    if (event.detail.target.querySelector('#fichaForm')) {
+                        initCadastroScripts();
+                    }
                 }
             });
-        }
-        
-        // Lógica de navegação Tab/Enter
-        form.addEventListener('keydown', function(event) {
-            if (event.key !== 'Enter' && event.key !== 'Tab') { return; }
-            const activeElement = document.activeElement;
-            if (activeElement.id === 'saveButton' || activeElement.tagName.toLowerCase() === 'textarea') { return; }
-            event.preventDefault();
-            const focusableElements = Array.from(form.querySelectorAll('input:not([readonly]):not(.lock-switch), select, textarea, button'));
-            const currentIndex = focusableElements.indexOf(activeElement);
-            let nextIndex = currentIndex;
-            const direction = event.shiftKey ? -1 : 1;
-            do {
-                nextIndex = (nextIndex + direction + focusableElements.length) % focusableElements.length;
-                if (nextIndex === currentIndex) break;
-            } while (isLocked(focusableElements[nextIndex].id));
-            const nextElement = focusableElements[nextIndex];
-            if (nextElement) nextElement.focus();
-        });
+        </script>
 
-        // Lógica de pesquisa para Pregões
-        const searchPregao = document.getElementById('searchPregao');
-        if (searchPregao) {
-            searchPregao.addEventListener('input', function(event) {
-                const searchTerm = event.target.value.toLowerCase();
-                const items = document.querySelectorAll('#pregao-list-container .side-panel-item');
-                items.forEach(item => {
-                    item.style.display = item.textContent.toLowerCase().includes(searchTerm) ? '' : 'none';
-                });
-            });
-        }
-
-        // Lógica de pesquisa para Empresas
-        const searchEmpresa = document.getElementById('searchEmpresa');
-        if (searchEmpresa) {
-            searchEmpresa.addEventListener('input', function(event) {
-                const searchTerm = event.target.value.toLowerCase();
-                const items = document.querySelectorAll('#empresa-list-container .side-panel-item');
-                items.forEach(item => {
-                    item.style.display = item.textContent.toLowerCase().includes(searchTerm) ? '' : 'none';
-                });
-            });
-        }
-    }
-
-    // Evento principal do HTMX que orquestra a inicialização dos scripts
-    document.body.addEventListener('htmx:afterSwap', function(event) {
-        if (event.detail.target.id === 'main-content') {
-            if (event.detail.target.querySelector('#fichaForm')) {
-                initCadastroScripts();
-            }
-        }
-    });
-</script>
-
-</body>
+    </body>
 </html>

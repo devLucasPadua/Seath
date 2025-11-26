@@ -1,49 +1,73 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <body>
-<div class="row" data-th-fragment="gerenciarEmpresas">
-    <div class="col-lg-8">
-        <div class="card shadow-sm mb-5">
-            <div class="card-header bg-primary text-white"><h4 class="my-1">Cadastrar Nova Empresa</h4></div>
-            <div class="card-body">
-                <!-- CORREÇÃO APLICADA: data-hx-on-htmx-after-request -->
-                <form id="empresaForm"
-                      data-th-object="${empresaForm}"
-                      data-hx-post="/api/empresas/salvar"
-                      data-hx-target="#form-messages"
-                      data-hx-swap="innerHTML"
-                      data-hx-on-htmx-after-request="if(event.detail.successful) { this.reset(); htmx.trigger('body', 'loadList'); }">
-                    
-                    <div id="form-messages"></div>
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <label for="nome" class="form-label">Nome da Empresa:</label>
-                            <input type="text" id="nome" data-th-field="*{nome}" class="form-control" autocomplete="off"/>
+    
+    <div id="conteudo-empresas" data-th-fragment="conteudoEmpresas">
+        
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
+                <h4 class="my-1"><i class="bi bi-buildings"></i> Gerenciar Empresas</h4>
+                
+                <!-- Form de Upload (Collapse) -->
+                <button class="btn btn-light text-dark btn-sm fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#uploadArea">
+                    <i class="bi bi-file-earmark-pdf"></i> Importar do PDF
+                </button>
+            </div>
+
+            <div class="collapse bg-light border-bottom" id="uploadArea">
+                <div class="card-body">
+                    <form data-hx-post="/empresas/importar-lote" 
+                          data-hx-target="#conteudo-empresas" 
+                          data-hx-swap="outerHTML"
+                          data-hx-encoding="multipart/form-data">
+                        <div class="input-group">
+                            <label class="input-group-text">PDF de Vencedores:</label>
+                            <input type="file" class="form-control" name="file" accept=".pdf" required>
+                            <button class="btn btn-success" type="submit">Importar</button>
                         </div>
-                        <div class="col-md-6">
-                            <label for="cnpj" class="form-label">CNPJ:</label>
-                            <input type="text" id="cnpj" data-th-field="*{cnpj}" class="form-control" autocomplete="off"/>
+                        <div class="form-text small mt-1">
+                            Extrai CNPJ e Nome de relatórios do portal e cadastra automaticamente se não existirem.
                         </div>
-                    </div>
-                    <hr class="my-4">
-                    <button type="submit" class="w-100 btn btn-primary btn-lg">Salvar Empresa</button>
-                </form>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card-body p-0">
+                <!-- Mensagens -->
+                <div data-th-if="${success}" class="alert alert-success alert-dismissible fade show m-3">
+                    <span data-th-text="${success}"></span><button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                <div data-th-if="${info}" class="alert alert-info alert-dismissible fade show m-3">
+                    <span data-th-text="${info}"></span><button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                <div data-th-if="${error}" class="alert alert-danger alert-dismissible fade show m-3">
+                    <span data-th-text="${error}"></span><button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover mb-0 align-middle">
+                        <thead class="table-dark text-white">
+                            <tr>
+                                <th class="text-center" style="width: 10%;">ID</th>
+                                <th style="width: 60%;">Razão Social / Nome</th>
+                                <th class="text-center" style="width: 30%;">CNPJ / Documento</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr data-th-each="emp : ${listaEmpresas}">
+                                <td class="text-center fw-bold text-muted" data-th-text="${emp.id}"></td>
+                                <td class="fw-bold text-primary" data-th-text="${emp.nome}"></td>
+                                <td class="text-center font-monospace" data-th-text="${emp.cnpj}"></td>
+                            </tr>
+                            <tr data-th-if="${#lists.isEmpty(listaEmpresas)}">
+                                <td colspan="3" class="text-center py-5 text-muted">Nenhuma empresa cadastrada.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
-    <div class="col-lg-4">
-        <div class="card shadow-sm mb-5">
-            <div class="card-header"><h4 class="my-1">Empresas Cadastradas</h4></div>
-            <div class="card-body">
-                <input type="search" id="searchEmpresa" class="form-control mb-3" placeholder="Pesquisar..." 
-                       data-hx-get="/view/empresas/lista" 
-                       data-hx-trigger="keyup changed delay:500ms, loadList from body" 
-                       data-hx-target="#empresa-list-container"
-                       name="termoBusca">
-                <div id="empresa-list-container" data-th-replace="~{fragments/lista_empresas :: listaEmpresas}"></div>
-            </div>
-        </div>
-    </div>
-</div>
+    
 </body>
 </html>

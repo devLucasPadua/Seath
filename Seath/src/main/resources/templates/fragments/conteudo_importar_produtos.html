@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<body>
+    
+    <div id="produtos-container" data-th-fragment="conteudoImportarProdutos">
+        
+        <!-- Alertas -->
+        <div data-th-if="${success}" class="alert alert-success alert-dismissible fade show mx-3 mt-3">
+            <i class="bi bi-check-circle-fill me-2"></i><span data-th-text="${success}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        <div data-th-if="${error}" class="alert alert-danger alert-dismissible fade show mx-3 mt-3">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i><span data-th-text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                <h4 class="my-1"><i class="bi bi-box-seam"></i> Gestão de Produtos</h4>
+            </div>
+            
+            <div class="card-body bg-light border-bottom">
+                <div class="row g-3">
+                    
+                    <!-- 1. IMPORTAR -->
+                    <div class="col-md-4">
+                        <div class="card h-100 border-primary">
+                            <div class="card-header bg-primary text-white fw-bold small py-1">1. Importar Itens (Site)</div>
+                            <div class="card-body p-2">
+                                <form data-hx-post="/produtos/importar" 
+                                      data-hx-target="#produtos-container" 
+                                      data-hx-swap="outerHTML"
+                                      data-hx-indicator="#loading-prod">
+                                    <div class="input-group input-group-sm">
+                                        <input type="text" class="form-control" name="url" placeholder="URL..." required>
+                                        <button class="btn btn-primary" type="submit"><i class="bi bi-cloud-download"></i></button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. VINCULAR CÓDIGOS -->
+                    <div class="col-md-4">
+                        <div class="card h-100 border-success">
+                            <div class="card-header bg-success text-white fw-bold small py-1">2. Vincular Códigos (PDF)</div>
+                            <div class="card-body p-2">
+                                <form data-hx-post="/produtos/vincular-codigos" 
+                                      data-hx-target="#produtos-container" 
+                                      data-hx-swap="outerHTML"
+                                      data-hx-encoding="multipart/form-data">
+                                    <div class="input-group input-group-sm">
+                                        <input type="file" class="form-control" name="fileCodigos" accept=".pdf" required>
+                                        <button class="btn btn-success" type="submit"><i class="bi bi-link-45deg"></i></button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. MANUTENÇÃO (NOVO) -->
+                    <div class="col-md-4">
+                        <div class="card h-100 border-warning">
+                            <div class="card-header bg-warning text-dark fw-bold small py-1">3. Manutenção</div>
+                            <div class="card-body p-2 d-flex align-items-center justify-content-center">
+                                <form data-hx-post="/produtos/limpar-duplicados" 
+                                      data-hx-target="#produtos-container" 
+                                      data-hx-swap="outerHTML"
+                                      data-hx-confirm="Tem certeza? Isso apagará produtos com nomes duplicados.">
+                                    <button class="btn btn-sm btn-outline-warning text-dark fw-bold w-100" type="submit">
+                                        <i class="bi bi-trash"></i> Remover Duplicatas
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                
+                <div id="loading-prod" class="htmx-indicator mt-2 text-center text-primary small">
+                    <div class="spinner-border spinner-border-sm" role="status"></div>
+                    <span> Processando requisição...</span>
+                </div>
+            </div>
+
+            <!-- TABELA (Mesma do anterior) -->
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover mb-0 align-middle table-sm">
+                        <thead class="table-secondary">
+                            <tr>
+                                <th class="text-center ps-3" style="width: 80px;">ID</th>
+                                <th class="text-center" style="width: 120px;">Código</th>
+                                <th>Nome do Produto</th>
+                                <th class="text-center" style="width: 100px;">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr data-th-each="prod : ${listaProdutos}">
+                                <td class="text-center text-muted small ps-3" data-th-text="${prod.id}"></td>
+                                <td class="text-center fw-bold font-monospace small" 
+                                    data-th-classappend="${prod.codigo != null && !prod.codigo.isEmpty() ? 'text-primary' : 'text-muted'}"
+                                    data-th-text="${prod.codigo != null && !prod.codigo.isEmpty() ? prod.codigo : '-'}">
+                                </td>
+                                <td class="small" data-th-text="${prod.nome}"></td>
+                                <td class="text-center">
+                                    <i data-th-if="${prod.codigo != null && !prod.codigo.isEmpty()}" class="bi bi-check-circle-fill text-success fs-5" title="Validado"></i>
+                                    <i data-th-if="${prod.codigo == null || prod.codigo.isEmpty()}" class="bi bi-exclamation-circle text-warning fs-5" title="Pendente"></i>
+                                </td>
+                            </tr>
+                            <tr data-th-if="${listaProdutos.isEmpty()}">
+                                <td colspan="4" class="text-center py-4 text-muted">Nenhum dado cadastrado.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

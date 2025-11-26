@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<body>
+    
+    <div data-th-fragment="conteudoImportar">
+        
+        <!-- Área de Feedback (Alertas) -->
+        <div data-th-if="${success}" class="alert alert-success alert-dismissible fade show mx-3 mt-3" role="alert">
+            <span data-th-text="${success}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        <div data-th-if="${error}" class="alert alert-danger alert-dismissible fade show mx-3 mt-3" role="alert">
+            <span data-th-text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                <h4 class="my-1"><i class="bi bi-file-earmark-pdf"></i> Importar Vencedores</h4>
+                
+                <!-- Formulário de Upload Disfarçado -->
+                <form id="formPdfUpload" 
+                      data-hx-post="/importar/pdf" 
+                      data-hx-encoding="multipart/form-data" 
+                      data-hx-target="#main-content" 
+                      data-hx-swap="innerHTML">
+                    
+                    <input type="file" name="file" id="fileInput" accept=".pdf" style="display: none;" onchange="htmx.trigger('#formPdfUpload', 'submit')">
+                    
+                    <button type="button" class="btn btn-primary" onclick="document.getElementById('fileInput').click()">
+                        <i class="bi bi-plus-lg"></i> Adicionar PDF
+                    </button>
+                </form>
+            </div>
+
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover mb-0">
+                        <thead class="table-dark text-white">
+                            <tr>
+                                <th class="text-center py-3" style="width: 10%;">ID</th>
+                                <th class="text-center py-3" style="width: 20%;">Pregão Extraído</th>
+                                <th class="text-start py-3" style="width: 40%;">Razão Social (Empresa)</th>
+                                <th class="text-center py-3" style="width: 30%;">CNPJ / Documento</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr data-th-each="vencedor : ${listaVencedores}">
+                                <td class="text-center align-middle" data-th-text="${vencedor.id}"></td>
+                                <td class="text-center align-middle fw-bold text-primary" data-th-text="${vencedor.numeroPregao}"></td>
+                                <td class="text-start align-middle" data-th-text="${vencedor.nomeEmpresa}"></td>
+                                <td class="text-center align-middle font-monospace" data-th-text="${vencedor.cnpj}"></td>
+                            </tr>
+                            
+                            <tr data-th-if="${listaVencedores == null || listaVencedores.isEmpty()}">
+                                <td colspan="4" class="text-center text-muted py-5">
+                                    <i class="bi bi-cloud-upload fs-1 d-block mb-3"></i>
+                                    Nenhum dado importado. Clique em "Adicionar PDF" para começar.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</body>
+</html>

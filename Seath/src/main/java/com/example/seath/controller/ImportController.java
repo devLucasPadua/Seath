@@ -1,75 +1,46 @@
 package com.example.seath.controller;
 
-import com.example.seath.service.ImportService;
+import com.example.seath.repository.VencedorRepository;
+import com.example.seath.service.PdfImportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 @Controller
 public class ImportController {
 
-    @Autowired
-    private ImportService importService;
+    @Autowired private PdfImportService pdfImportService;
+    @Autowired private VencedorRepository vencedorRepository;
 
-    @GetMapping("/importar")
-    public String paginaImportar() {
-        return "importar";
+    // Carrega o fragmento HTML (Tabela + Botão)
+    @GetMapping("/view/importar")
+    public String getPaginaImportar(Model model) {
+        model.addAttribute("listaVencedores", vencedorRepository.findAll());
+        return "fragments/conteudo_importar :: conteudoImportar";
     }
 
-    @PostMapping("/importar")
-    public String uploadArquivo(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+    // Processa o Upload
+    @PostMapping("/importar/pdf")
+    public String uploadPdf(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes, Model model) {
         if (file.isEmpty()) {
-            redirectAttributes.addFlashAttribute("error", "Por favor, selecione um arquivo para importar.");
-            return "redirect:/importar";
-        }
-
-        try {
-            String originalFilename = file.getOriginalFilename();
-            String nomePregao = "";
-            String numeroPregao = "";
-
-            if (originalFilename != null) {
-                // Lógica para extrair o Nome e o Número do Pregão do nome do arquivo
-                // Exemplo: "Algodão - PE 029.xlsx"
-                
-                // 1. Encontra o separador " - PE "
-                int separadorIndex = originalFilename.indexOf(" - PE ");
-                if (separadorIndex != -1) {
-                    // O nome é tudo o que vem antes do separador
-                    nomePregao = originalFilename.substring(0, separadorIndex).trim();
-
-                    // Pega a string que vem depois do separador
-                    String parteNumerica = originalFilename.substring(separadorIndex + " - PE ".length());
-
-                    // ### LÓGICA CORRIGIDA AQUI ###
-                    // 2. Usa Regex para encontrar a primeira sequência de um ou mais dígitos
-                    Pattern pattern = Pattern.compile("(\\d+)");
-                    Matcher matcher = pattern.matcher(parteNumerica);
-
-                    if (matcher.find()) {
-                        // Pega o primeiro grupo de números encontrado (ex: "029")
-                        numeroPregao = matcher.group(1).trim();
-                    }
-                }
+            model.addAttribute("error", "Selecione um arquivo PDF.");
+        } else {
+            try {
+                pdfImportService.importarPdfVencedores(file.getInputStream());
+                model.addAttribute("success", "PDF processado com sucesso! Dados extraídos.");
+            } catch (Exception e) {
+                e.printStackTrace();
+                model.addAttribute("error", "Erro ao processar PDF: " + e.getMessage());
             }
-
-            // Passa os dados extraídos para o serviço
-            importService.importarPlanilha(file.getInputStream(), nomePregao, numeroPregao);
-            
-            redirectAttributes.addFlashAttribute("success", "Planilha importada com sucesso!");
-
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Falha ao importar a planilha: " + e.getMessage());
-            e.printStackTrace();
         }
-
-        return "redirect:/";
+        
+        // Retorna a tabela atualizada
+        model.addAttribute("listaVencedores", vencedorRepository.findAll());
+        return "fragments/conteudo_importar :: conteudoImportar";
     }
 }

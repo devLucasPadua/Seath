@@ -1,73 +1,113 @@
-<?xml version="1.0" encoding="UTF-8"?> <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd"> 
-    <modelVersion>4.0.0</modelVersion> 
-    <parent> 
-        <groupId>org.springframework.boot</groupId> 
-        <artifactId>spring-boot-starter-parent</artifactId> 
-        <version>3.2.5</version> 
-        <relativePath/> 
-    </parent> 
-    <groupId>com.example</groupId> 
-    <artifactId>seath</artifactId> 
-    <version>0.0.1-SNAPSHOT</version> 
-    <name>seath</name> 
-    <description>Sistema de cadastro de fichas de produto</description> 
-    <properties> 
-        <java.version>17</java.version> 
-    </properties> 
-    <dependencies> <!-- Dependências do Spring e do Projeto --> 
-        <dependency> 
-            <groupId>org.springframework.boot</groupId> 
-            <artifactId>spring-boot-starter-web</artifactId> 
-        </dependency> 
-        <dependency> 
-            <groupId>org.springframework.boot</groupId> 
-            <artifactId>spring-boot-starter-data-jpa</artifactId> 
-        </dependency> 
-        <dependency> 
-            <groupId>org.springframework.boot</groupId> 
-            <artifactId>spring-boot-starter-thymeleaf</artifactId> 
-        </dependency> 
-        <dependency> 
-            <groupId>org.xerial</groupId> 
-            <artifactId>sqlite-jdbc</artifactId> 
-            <version>3.45.3.0</version> 
-        </dependency> 
-        <dependency> 
-            <groupId>org.hibernate.orm</groupId> 
-            <artifactId>hibernate-community-dialects</artifactId> 
-        </dependency> 
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.2.5</version>
+        <relativePath/>
+    </parent>
+    
+    <groupId>com.example</groupId>
+    <artifactId>seath</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>seath</name>
+    <description>Sistema de cadastro de fichas de produto</description>
+    
+    <properties>
+        <java.version>17</java.version>
+    </properties>
+    
+    <dependencies>
+        <!-- 1. Spring Boot Web e JPA -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+        
+        <!-- 2. Ferramentas de Desenv. -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
 
-        <dependency> 
-            <groupId>org.springframework.boot</groupId> 
-            <artifactId>spring-boot-devtools</artifactId> 
-            <scope>runtime</scope> 
-            <optional>true</optional> 
-        </dependency> 
-        <dependency> 
-            <groupId>org.projectlombok</groupId> 
-            <artifactId>lombok</artifactId> 
-            <optional>true</optional> 
-        </dependency> 
-        <dependency> 
-            <groupId>org.springframework.boot</groupId> 
-            <artifactId>spring-boot-starter-validation</artifactId> 
-        </dependency> 
-        <dependency> 
-            <groupId>org.springframework.boot</groupId> 
-            <artifactId>spring-boot-starter-test</artifactId> 
-            <scope>test</scope> 
-        </dependency> <!-- ### INÍCIO - DEPENDÊNCIAS PARA GERAR DOCX (VERSÃO 2.0.2 ESTÁVEL) ### --> 
-        <dependency> 
-            <groupId>fr.opensagres.xdocreport</groupId> 
-            <artifactId>fr.opensagres.xdocreport.document.docx</artifactId> 
-            <version>2.0.2</version> 
-        </dependency> 
-        <dependency> 
-            <groupId>fr.opensagres.xdocreport</groupId> 
-            <artifactId>fr.opensagres.xdocreport.template.freemarker</artifactId> 
-            <version>2.0.2</version> 
-        </dependency> <!-- ### FIM - DEPENDÊNCIAS PARA GERAR DOCX ### --> 
-      <dependency>
+        <!-- 3. Banco de Dados (SQLite + Hibernate Dialect) -->
+        <dependency>
+            <groupId>org.xerial</groupId>
+            <artifactId>sqlite-jdbc</artifactId>
+            <version>3.45.3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-community-dialects</artifactId>
+        </dependency>
+
+        <!-- 4. Web Scraping (Jsoup) - Leitura da API do Site -->
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.15.3</version>
+        </dependency>
+
+        <!-- 5. Automação de Navegador (Selenium) - Para baixar o PDF -->
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>4.18.1</version>
+        </dependency>
+        
+        <!-- 6. Gerenciador de Drivers (Para o Chrome não dar erro de versão) -->
+        <dependency>
+            <groupId>io.github.bonigarcia</groupId>
+            <artifactId>webdrivermanager</artifactId>
+            <version>5.7.0</version>
+        </dependency>
+
+        <!-- 7. Leitura de PDF (PDFBox) - Para extrair texto do PDF baixado -->
+        <dependency>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>pdfbox</artifactId>
+            <version>2.0.31</version>
+        </dependency>
+
+        <!-- 8. Excel e DOCX (Para o restante do sistema Seath) -->
+        <dependency>
+            <groupId>fr.opensagres.xdocreport</groupId>
+            <artifactId>fr.opensagres.xdocreport.document.docx</artifactId>
+            <version>2.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>fr.opensagres.xdocreport</groupId>
+            <artifactId>fr.opensagres.xdocreport.template.freemarker</artifactId>
+            <version>2.0.2</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
             <version>5.2.5</version>
@@ -75,33 +115,26 @@
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
-            <version>5.2.3</version> <!-- Versão recente e estável -->
+            <version>5.2.5</version>
             <type>jar</type>
         </dependency>
 
-    </dependencies> 
-    <build> 
-        <plugins> 
-            <plugin> 
-                <groupId>org.springframework.boot</groupId> 
-                <artifactId>spring-boot-maven-plugin</artifactId> 
-                <configuration> 
-                    <excludes> 
-                        <exclude> 
-                            <groupId>org.projectlombok</groupId> 
-                            <artifactId>lombok</artifactId> 
-                        </exclude> 
-                    </excludes> 
-                </configuration> 
-            </plugin> <!-- ### CORREÇÃO PARA EXECUÇÃO NO NETBEANS ### --> 
-            <plugin> 
-                <groupId>org.codehaus.mojo</groupId> 
-                <artifactId>exec-maven-plugin</artifactId> 
-                <version>3.1.0</version> 
-                <configuration> 
-                    <mainClass>com.example.seath.SeathApplication</mainClass> 
-                </configuration> 
-            </plugin> 
-        </plugins> 
-    </build> 
-</project> 
+    </dependencies>
+    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

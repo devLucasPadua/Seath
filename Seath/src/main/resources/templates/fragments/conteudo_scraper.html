@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<body>
+    
+    <div id="scraper-container" data-th-fragment="conteudoScraper">
+        
+        <!-- Cabeçalho -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3 class="text-dark"><i class="bi bi-briefcase-fill"></i> Gerenciar Pregão</h3>
+        </div>
+
+        <!-- Feedback e Alertas -->
+        <div data-th-if="${success}" class="alert alert-success alert-dismissible fade show">
+            <i class="bi bi-check-lg me-2"></i> <span data-th-text="${success}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        <div data-th-if="${info}" class="alert alert-info alert-dismissible fade show">
+            <i class="bi bi-info-circle me-2"></i> <span data-th-text="${info}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        <div data-th-if="${error}" class="alert alert-danger alert-dismissible fade show">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i> <span data-th-text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <div class="row g-4">
+            
+            <!-- LADO ESQUERDO (CONTROLES) -->
+            <div class="col-md-4">
+                
+                <!-- 1. NOVA EXTRAÇÃO -->
+                <div class="card shadow-sm mb-3 border-primary">
+                    <div class="card-header bg-primary text-white fw-bold small">
+                        <i class="bi bi-cloud-download"></i> Nova Extração
+                    </div>
+                    <div class="card-body p-2">
+                        <form data-hx-post="/scraper/buscar" 
+                              data-hx-target="#scraper-container" 
+                              data-hx-swap="outerHTML" 
+                              data-hx-indicator="#loading">
+                            <div class="input-group input-group-sm mb-1">
+                                <input type="text" class="form-control" name="url" placeholder="URL do Portal..." required>
+                                <button class="btn btn-primary" type="submit">Vai</button>
+                            </div>
+                            <small class="text-muted" style="font-size: 0.75rem">Baixa Site + PDF Vencedores e atualiza empresas.</small>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- 2. VINCULAR CÓDIGOS (PDF) - Apenas se houver pregão carregado -->
+                <!-- ESTE É O NOVO CAMPO SOLICITADO -->
+                <div class="card shadow-sm mb-3 border-warning" data-th-if="${currentRef != null}">
+                    <div class="card-header bg-warning text-dark fw-bold small">
+                        <i class="bi bi-upc-scan"></i> Vincular Códigos (Memorial)
+                    </div>
+                    <div class="card-body p-2 bg-light">
+                        <form data-hx-post="/scraper/vincular-codigos" 
+                              data-hx-target="#scraper-container" 
+                              data-hx-swap="outerHTML"
+                              data-hx-encoding="multipart/form-data"
+                              data-hx-indicator="#loading-code">
+                            
+                            <!-- Mantém o estado do pregão atual -->
+                            <input type="hidden" name="currentRef" data-th-value="${currentRef}">
+                            <input type="hidden" name="isUrl" data-th-value="${isUrl}">
+
+                            <div class="mb-2">
+                                <input type="file" class="form-control form-control-sm" name="fileCodigos" accept=".pdf" required>
+                            </div>
+                            <button class="btn btn-warning w-100 btn-sm fw-bold" type="submit">
+                                Atualizar Códigos
+                            </button>
+                            <div id="loading-code" class="htmx-indicator text-center mt-1">
+                                <small class="text-muted"><span class="spinner-border spinner-border-sm"></span> Lendo PDF...</small>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- 3. HISTÓRICO -->
+                <div class="card shadow-sm border-secondary">
+                    <div class="card-header bg-secondary text-white fw-bold small">
+                        <i class="bi bi-clock-history"></i> Histórico Salvo
+                    </div>
+                    <div class="card-body p-2">
+                        <form data-hx-post="/scraper/carregar-salvo" data-hx-target="#scraper-container" data-hx-swap="outerHTML">
+                            <div class="input-group input-group-sm">
+                                <select class="form-select" name="pregaoId" onchange="htmx.trigger(this.form, 'submit')">
+                                    <option value="" selected disabled>Carregar...</option>
+                                    <option data-th-each="p : ${listaPregoesDb}" 
+                                            data-th-value="${p.id}" 
+                                            data-th-text="${p.nome}"
+                                            data-th-selected="${p.id.toString() == currentRef and !isUrl}"></option>
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- LOADING GLOBAL -->
+                <div id="loading" class="htmx-indicator mt-2 text-center p-2 bg-light border rounded">
+                    <div class="spinner-border text-primary spinner-border-sm" role="status"></div>
+                    <span class="ms-2 small fw-bold">Processando (Web + Selenium)...</span>
+                </div>
+            </div>
+
+            <!-- LADO DIREITO (TABELA) -->
+            <div class="col-md-8">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center py-1">
+                        <h6 class="mb-0"><i class="bi bi-list-ul"></i> Itens do Pregão</h6>
+                        
+                        <!-- Botão CSV só aparece se tem itens -->
+                        <a data-th-if="${not #lists.isEmpty(listaItens)}" 
+                           href="/scraper/download" target="_blank" class="btn btn-xs btn-success py-0">
+                           CSV
+                        </a>
+                    </div>
+                    
+                    <div class="card-body p-0">
+                        <div class="table-responsive" style="max-height: 650px;">
+                            <table class="table table-striped table-hover mb-0 align-middle small">
+                                <thead class="table-secondary sticky-top">
+                                    <tr>
+                                        <th class="text-center" style="width: 50px;">Item</th>
+                                        <th class="text-center" style="width: 90px;">Cód.</th>
+                                        <th>Produto / Descrição</th>
+                                        <th style="width: 25%;">Empresa Vencedora</th>
+                                        <th class="text-center" style="width: 100px;">Situação</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr data-th-each="item : ${listaItens}">
+                                        <td class="text-center fw-bold" data-th-text="${item.numero}"></td>
+                                        
+                                        <td class="text-center">
+                                            <span data-th-if="${item.codigoBanco != null}" class="badge bg-primary font-monospace" data-th-text="${item.codigoBanco}"></span>
+                                            <span data-th-if="${item.codigoBanco == null}" class="badge bg-secondary opacity-50" title="Produto sem código">NC</span>
+                                        </td>
+                                        
+                                        <td><div class="text-truncate" style="max-width: 350px;" data-th-text="${item.descricao}" data-th-title="${item.descricao}"></div></td>
+                                        
+                                        <td>
+                                            <span data-th-if="${item.empresa != null && !item.empresa.isEmpty()}" class="text-success fw-bold" data-th-text="${item.empresa}"></span>
+                                            <span data-th-if="${item.empresa == null || item.empresa.isEmpty()}" class="text-muted">-</span>
+                                        </td>
+                                        
+                                        <td class="text-center">
+                                            <span class="badge border" data-th-classappend="${item.codigoSituacao == '28' ? 'bg-warning text-dark' : (item.codigoSituacao == '1' ? 'bg-success text-white' : 'bg-light text-dark')}" data-th-text="${item.descricaoSituacao}"></span>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr data-th-if="${#lists.isEmpty(listaItens)}">
+                                        <td colspan="5" class="text-center py-5 text-muted">
+                                            <i class="bi bi-arrow-left-circle fs-3 d-block mb-2"></i> Carregue ou extraia um pregão.
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
